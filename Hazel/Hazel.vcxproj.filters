@@ -31,16 +31,16 @@
     <ClInclude Include="src\Hazel\EntryPoint.h">
       <Filter>Hazel</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazel\Events\ApplicationEvent.h">
+    <ClInclude Include="src\Hazel\Events\ApplicationEvents.h">
       <Filter>Hazel\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Events\Event.h">
       <Filter>Hazel\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazel\Events\KeyEvent.h">
+    <ClInclude Include="src\Hazel\Events\KeyEvents.h">
       <Filter>Hazel\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazel\Events\MouseEvent.h">
+    <ClInclude Include="src\Hazel\Events\MouseEvents.h">
       <Filter>Hazel\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\ImGui\ImGuiLayer.h">

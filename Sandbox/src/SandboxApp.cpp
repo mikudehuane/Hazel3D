@@ -1,4 +1,7 @@
-#include <Hazel.h>
+#include "hzpch.h"
+
+#include "Hazel.h"
+#include "Hazel/EntryPoint.h"
 
 class ExampleLayer : public Hazel::Layer
 {
@@ -15,9 +18,8 @@ public:
 
 	void OnEvent(Hazel::Event& event) override
 	{
-		HZ_TRACE("{0}", event);
+		HZ_TRACE("{0}", event.ToString());
 	}
-
 };
 
 class Sandbox : public Hazel::Application
@@ -31,12 +33,12 @@ public:
 
 	~Sandbox()
 	{
-
+		
 	}
-
 };
 
 Hazel::Application* Hazel::CreateApplication()
 {
 	return new Sandbox();
 }
+

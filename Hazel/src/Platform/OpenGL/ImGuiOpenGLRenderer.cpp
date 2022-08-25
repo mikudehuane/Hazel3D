@@ -56,7 +56,6 @@
 #include "hzpch.h"
 #include "imgui.h"
 #include "ImGuiOpenGLRenderer.h"
-#include "glad/glad.h"
 #include <stdio.h>
 #if defined(_MSC_VER) && _MSC_VER <= 1500 // MSVC 2008 or earlier
 #include <stddef.h>     // intptr_t
@@ -71,6 +70,25 @@
 // Call ImGui_ImplOpenGL3_Init() with "#version 300 es"
 #if (defined(__APPLE__) && TARGET_OS_IOS) || (defined(__ANDROID__)) || (defined(__EMSCRIPTEN__))
 #define USE_GL_ES3
+#endif
+
+#ifdef USE_GL_ES3
+// OpenGL ES 3
+#include <GLES3/gl3.h>  // Use GL ES 3
+#else
+// Regular OpenGL
+// About OpenGL function loaders: modern OpenGL doesn't have a standard header file and requires individual function pointers to be loaded manually. 
+// Helper libraries are often used for this purpose! Here we are supporting a few common ones: gl3w, glew, glad.
+// You may use another loader/header of your choice (glext, glLoadGen, etc.), or chose to manually implement your own.
+#if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
+#include <glad/glad.h>
+#elif defined(IMGUI_IMPL_OPENGL_LOADER_GLEW)
+#include <GL/glew.h>
+#elif defined(IMGUI_IMPL_OPENGL_LOADER_GLAD)
+#include <glad/glad.h>
+#else
+#include IMGUI_IMPL_OPENGL_LOADER_CUSTOM
+#endif
 #endif
 
 // OpenGL Data

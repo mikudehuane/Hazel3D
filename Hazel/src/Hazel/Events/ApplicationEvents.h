@@ -2,14 +2,16 @@
 
 #include "Event.h"
 
-namespace Hazel {
+namespace Hazel 
+{
 
 	class HAZEL_API WindowResizeEvent : public Event
 	{
 	public:
 		WindowResizeEvent(unsigned int width, unsigned int height)
 			: m_Width(width), m_Height(height) {}
-
+		
+		// new width and height
 		inline unsigned int GetWidth() const { return m_Width; }
 		inline unsigned int GetHeight() const { return m_Height; }
 

@@ -12,14 +12,17 @@ project "Glad"
         "src/glad.c"
     }
 
-	includedirs
-	{
-		"include"
-	}
+    includedirs
+    {
+        "include"
+    }
     
     filter "system:windows"
+        staticruntime "on"
         systemversion "latest"
-        staticruntime "On"
-        
-    filter { "system:windows", "configurations:Release" }
-        buildoptions "/MT"
+
+    filter { "system:windows", "configurations:Debug" }
+        runtime "Debug"
+
+    filter { "system:windows", "configurations:Release or Dist" }
+        runtime "Release"

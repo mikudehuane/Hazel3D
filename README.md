@@ -1,2 +1,0 @@
-# Hazel
-Hazel Engine

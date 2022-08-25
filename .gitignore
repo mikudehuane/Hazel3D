@@ -1,7 +1,8 @@
 # Directories
-.vs/
-bin/
+imgui.ini
+/.vs/
 bin-int/
+bin/
 
-# Files
+# files
 *.user

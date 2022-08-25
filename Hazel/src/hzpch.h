@@ -1,5 +1,7 @@
 #pragma once
 
+// precompiled header for Hazel project
+
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -17,3 +19,4 @@
 #ifdef HZ_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif
+
