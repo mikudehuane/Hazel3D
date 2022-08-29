@@ -13,9 +13,12 @@ namespace Hazel
 	{
 		HZ_CORE_ASSERT(s_Instance == nullptr, "Application already exists!");
 		s_Instance = this;
-		m_Window = std::unique_ptr<Window>(Window::Create());
 
+		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(HZ_BIND_EVENT_FN(Application::OnEvent));
+
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()
@@ -34,6 +37,13 @@ namespace Hazel
 			{
 				layer->OnUpdate();
 			}
+
+			ImGuiLayer::Begin();
+			for (Layer* layer : m_LayerStack)
+			{
+				layer->OnImGuiRender();
+			}
+			ImGuiLayer::End();
 
 			m_Window->OnUpdate();
 		}
