@@ -1,7 +1,7 @@
 #include "hzpch.h"
 
-#include "Hazel.h"
-#include "Hazel/EntryPoint.h"
+#include <Hazel.h>
+#include "Hazel/Events/Event.h"
 
 class ExampleLayer : public Hazel::Layer
 {

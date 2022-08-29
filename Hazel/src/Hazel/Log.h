@@ -1,7 +1,8 @@
 #pragma once
 #include "Core.h"
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/fmt/bundled/ostream.h>  // this allows spdlog to search for operator<< when formatting customized object
 
 namespace Hazel
 {

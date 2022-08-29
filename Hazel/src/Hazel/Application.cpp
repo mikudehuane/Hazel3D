@@ -45,7 +45,7 @@ namespace Hazel
 		// the application itself handles only window close
 		dispatcher.Dispatch<WindowCloseEvent>(HZ_BIND_EVENT_FN(Application::OnWindowClosed));
 		
-		HZ_CORE_TRACE("{0}", e.ToString());
+		HZ_CORE_TRACE("{0}", e);
 		
 		if (!e.Handled)
 		{
