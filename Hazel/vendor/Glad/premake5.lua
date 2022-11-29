@@ -20,8 +20,7 @@ project "Glad"
     
     filter "system:windows"
         systemversion "latest"
-        staticruntime "on"
-    
+
     filter "configurations:Debug"
         runtime "Debug"
         symbols "on"
