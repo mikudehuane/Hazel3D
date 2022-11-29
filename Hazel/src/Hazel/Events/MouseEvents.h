@@ -2,8 +2,7 @@
 
 #include "Event.h"
 
-namespace Hazel 
-{
+namespace Hazel {
 
 	class HAZEL_API MouseMovedEvent : public Event
 	{
@@ -32,8 +31,7 @@ namespace Hazel
 	public:
 		MouseScrolledEvent(float xOffset, float yOffset)
 			: m_XOffset(xOffset), m_YOffset(yOffset) {}
-		
-		// where we scrolled
+
 		inline float GetXOffset() const { return m_XOffset; }
 		inline float GetYOffset() const { return m_YOffset; }
 
@@ -47,7 +45,7 @@ namespace Hazel
 		EVENT_CLASS_TYPE(MouseScrolled)
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	private:
-		float m_XOffset, m_YOffset;  
+		float m_XOffset, m_YOffset;
 	};
 
 	class HAZEL_API MouseButtonEvent : public Event

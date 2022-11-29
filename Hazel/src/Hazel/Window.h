@@ -25,10 +25,10 @@ namespace Hazel {
 	class HAZEL_API Window
 	{
 	public:
-		using EventCallbackFn = std::function<void(Event&)>;  // interface for GLFW API's callback
-		
+		using EventCallbackFn = std::function<void(Event&)>;
+
 		virtual ~Window() {}
-		
+
 		virtual void OnUpdate() = 0;
 
 		virtual unsigned int GetWidth() const = 0;
@@ -39,9 +39,8 @@ namespace Hazel {
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;
 
-		virtual void* GetNativeWindow() const = 0;  // return the native window ptr
+		virtual void* GetNativeWindow() const = 0;
 
-		// this function should be implemented per platform
 		static Window* Create(const WindowProps& props = WindowProps());
 	};
 

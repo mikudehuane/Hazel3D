@@ -3,7 +3,7 @@
 #include "Hazel/Input.h"
 
 namespace Hazel {
-	// do not export in DLL
+
 	class WindowsInput : public Input
 	{
 	protected:
@@ -14,5 +14,5 @@ namespace Hazel {
 		virtual float GetMouseXImpl() override;
 		virtual float GetMouseYImpl() override;
 	};
-}
 
+}

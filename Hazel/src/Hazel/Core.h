@@ -1,26 +1,23 @@
 #pragma once
 
 #ifdef HZ_PLATFORM_WINDOWS
-	#if HZ_DYNAMIC_LINK
-		#ifdef HZ_BUILD_DLL
-			#define HAZEL_API __declspec(dllexport)
-		#else
-			#define HAZEL_API __declspec(dllimport)
-		#endif
+#if HZ_DYNAMIC_LINK
+	#ifdef HZ_BUILD_DLL
+		#define HAZEL_API __declspec(dllexport)
 	#else
-		#define HAZEL_API
+		#define HAZEL_API __declspec(dllimport)
 	#endif
 #else
-	#error Hazel only support Windows!
+    #define HAZEL_API
 #endif
-
-#define BIT(x) (1 << x)
+#else
+	#error Hazel only supports Windows!
+#endif
 
 #ifdef HZ_DEBUG
 	#define HZ_ENABLE_ASSERTS
 #endif
 
-/* x will not be executed if not enabled */
 #ifdef HZ_ENABLE_ASSERTS
 	#define HZ_ASSERT(x, ...) { if(!(x)) { HZ_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
 	#define HZ_CORE_ASSERT(x, ...) { if(!(x)) { HZ_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
@@ -29,5 +26,6 @@
 	#define HZ_CORE_ASSERT(x, ...)
 #endif
 
-#define HZ_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)  // bind member function as normal function
+#define BIT(x) (1 << x)
 
+#define HZ_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)

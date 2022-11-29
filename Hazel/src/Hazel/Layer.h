@@ -3,12 +3,12 @@
 #include "Hazel/Core.h"
 #include "Hazel/Events/Event.h"
 
-namespace Hazel
-{
+namespace Hazel {
+
 	class HAZEL_API Layer
 	{
 	public:
-		Layer(const std::string& name = "layer");
+		Layer(const std::string& name = "Layer");
 		virtual ~Layer();
 
 		virtual void OnAttach() {}
@@ -18,10 +18,8 @@ namespace Hazel
 		virtual void OnEvent(Event& event) {}
 
 		inline const std::string& GetName() const { return m_DebugName; }
-
 	protected:
-		std::string m_DebugName;  // used only for debug
+		std::string m_DebugName;
 	};
 
 }
-
