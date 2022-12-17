@@ -6,7 +6,7 @@ class ExampleLayer : public Hazel::Layer
 {
 public:
 	ExampleLayer()
-		: Layer("Example")
+		: Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f)
 	{
 		m_VertexArray.reset(Hazel::VertexArray::Create());
 
@@ -56,6 +56,8 @@ public:
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec4 a_Color;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec3 v_Position;
 			out vec4 v_Color;
 
@@ -63,7 +65,7 @@ public:
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -88,9 +90,11 @@ public:
 
 			layout(location = 0) in vec3 a_Position;
 
+			uniform mat4 u_ViewProjection;
+
 			void main()
 			{
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -112,14 +116,14 @@ public:
 	{
 		Hazel::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Hazel::RenderCommand::Clear();
+		
+		m_Camera.SetRotation(m_CameraRotation);
+		m_Camera.SetPosition(m_CameraPosition);
 
-		Hazel::Renderer::BeginScene();
+		Hazel::Renderer::BeginScene(m_Camera);
 
-		m_BlueShader->Bind();
-		Hazel::Renderer::Submit(m_SquareVA);
-
-		m_Shader->Bind();
-		Hazel::Renderer::Submit(m_VertexArray);
+		Hazel::Renderer::Submit(m_BlueShader, m_SquareVA);
+		Hazel::Renderer::Submit(m_Shader, m_VertexArray);
 
 		Hazel::Renderer::EndScene();
 	}
@@ -133,13 +137,26 @@ public:
 
 	void OnEvent(Hazel::Event& event) override
 	{
-		if (event.GetEventType() == Hazel::EventType::KeyPressed)
-		{
-			Hazel::KeyPressedEvent& e = (Hazel::KeyPressedEvent&)event;
-			if (e.GetKeyCode() == HZ_KEY_TAB)
-				HZ_TRACE("Tab key is pressed (event)!");
-			HZ_TRACE("{0}", (char)e.GetKeyCode());
-		}
+		Hazel::EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<Hazel::KeyPressedEvent>(HZ_BIND_EVENT_FN(ExampleLayer::OnKeyPressedEvent));
+	}
+
+	bool OnKeyPressedEvent(Hazel::KeyPressedEvent& event)
+	{
+		if (event.GetKeyCode() == HZ_KEY_LEFT)
+			m_CameraPosition.x -= m_CameraSpeed;
+		else if (event.GetKeyCode() == HZ_KEY_RIGHT)
+			m_CameraPosition.x += m_CameraSpeed;
+		else if (event.GetKeyCode() == HZ_KEY_UP)
+			m_CameraPosition.y += m_CameraSpeed;
+		else if (event.GetKeyCode() == HZ_KEY_DOWN)
+			m_CameraPosition.y -= m_CameraSpeed;
+		else if (event.GetKeyCode() == HZ_KEY_A)
+			m_CameraRotation += m_CameraSpeed;
+		else if (event.GetKeyCode() == HZ_KEY_D)
+			m_CameraRotation -= m_CameraSpeed;
+
+		return false;
 	}
 private:
 	std::shared_ptr<Hazel::Shader> m_Shader;
@@ -147,6 +164,11 @@ private:
 
 	std::shared_ptr<Hazel::Shader> m_BlueShader;
 	std::shared_ptr<Hazel::VertexArray> m_SquareVA;
+
+	Hazel::OrthographicCamera m_Camera;
+	glm::vec3 m_CameraPosition;
+	float m_CameraSpeed = 0.1f;
+	float m_CameraRotation = 0.0f;
 };
 
 class Sandbox : public Hazel::Application
