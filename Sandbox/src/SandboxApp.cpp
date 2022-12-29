@@ -16,11 +16,12 @@ public:
 	{
 		m_SquareVA = Hazel::VertexArray::Create();
 
-		float squareVertices[5 * 4] = {
+		float texCoord = 5.0f;
+		float squareVertices[4 * 5] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
+			 0.5f, -0.5f, 0.0f, texCoord, 0.0f,
+			 0.5f,  0.5f, 0.0f, texCoord, texCoord,
+			-0.5f,  0.5f, 0.0f, 0.0f, texCoord
 		};
 		Hazel::Ref<Hazel::VertexBuffer> squareVB;
 		squareVB = Hazel::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
@@ -63,12 +64,16 @@ public:
 		)";
 
 		auto flatColorShader = Hazel::Shader::Create("FlatColor", flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
-		m_ShaderLibrary.Add(flatColorShader);
+		Hazel::Renderer::GetShaderLib()->Add(flatColorShader);
 
-		auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture");
+		auto textureShader = Hazel::Renderer::GetShaderLib()->Load("assets/shaders/Texture");
+		auto mixedTextureShader = Hazel::Renderer::GetShaderLib()->Load("assets/shaders/MixedTexture");
 
 		m_Texture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
 		m_ChernoLogoTexture = Hazel::Texture2D::Create("assets/textures/ChernoLogo.png");
+
+		m_ChernoLogoTexture->Bind();
+		m_ChernoLogoTexture->SetTexWrapT(HZ_MIRRORED_REPEAT);
 
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
@@ -103,7 +108,7 @@ public:
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		auto flatColorShader = m_ShaderLibrary.Get("FlatColor");
+		auto flatColorShader = Hazel::Renderer::GetShaderLib()->Get("FlatColor");
 		
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(flatColorShader)->Bind();
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(flatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
@@ -118,7 +123,7 @@ public:
 			}
 		}
 
-		auto textureShader = m_ShaderLibrary.Get("Texture");
+		auto textureShader = Hazel::Renderer::GetShaderLib()->Get("Texture");
 		
 		m_Texture->Bind();
 		Hazel::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
@@ -136,8 +141,6 @@ public:
 	}
 
 private:
-	Hazel::ShaderLibrary m_ShaderLibrary;
-
 	Hazel::Ref<Hazel::VertexArray> m_SquareVA;
 	Hazel::Ref<Hazel::Texture2D> m_Texture, m_ChernoLogoTexture;
 

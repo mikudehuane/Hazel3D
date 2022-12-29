@@ -7,6 +7,7 @@
 #include "Hazel/Log.h"
 
 #include "Hazel/Core/Timestep.h"
+#include "Hazel/Core/Constants.h"
 
 #include "Hazel/Input.h"
 #include "Hazel/KeyCodes.h"

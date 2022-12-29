@@ -14,6 +14,11 @@ namespace Hazel {
 		virtual uint32_t GetHeight() const override { return m_Height; }
 
 		virtual void Bind(uint32_t slot = 0) const override;
+
+		virtual void SetTexWrapS(int param);
+		virtual void SetTexWrapT(int param);
+	private:
+		int GetGLParam(int param) const;
 	private:
 		std::string m_Path;
 		uint32_t m_Width, m_Height;

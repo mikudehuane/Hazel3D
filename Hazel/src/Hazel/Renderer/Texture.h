@@ -13,6 +13,10 @@ namespace Hazel {
 		virtual uint32_t GetHeight() const = 0;
 		
 		virtual void Bind(uint32_t slot = 0) const = 0;
+
+		// texture setup
+		virtual void SetTexWrapS(int param) = 0;
+		virtual void SetTexWrapT(int param) = 0;
 	};
 
 	class Texture2D : public Texture

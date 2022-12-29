@@ -1,5 +1,6 @@
 #include "hzpch.h"
 #include "OpenGLTexture.h"
+#include "Hazel/Core/Constants.h"
 
 #include "stb_image.h"
 
@@ -34,10 +35,11 @@ namespace Hazel {
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glTextureStorage2D(m_RendererID, 1, internalFormat, m_Width, m_Height);
 
-		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, dataFormat, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
 
 		stbi_image_free(data);
 	}
@@ -51,4 +53,34 @@ namespace Hazel {
 	{
 		glBindTextureUnit(slot, m_RendererID);
 	}
+
+	void OpenGLTexture2D::SetTexWrapS(int param)
+	{
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GetGLParam(param));
+	}
+
+	void OpenGLTexture2D::SetTexWrapT(int param)
+	{
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GetGLParam(param));
+	}
+
+	int OpenGLTexture2D::GetGLParam(int param) const
+	{
+		switch (param)
+		{
+			case HZ_REPEAT: return GL_REPEAT;
+			case HZ_MIRRORED_REPEAT: return GL_MIRRORED_REPEAT;
+			case HZ_CLAMP_TO_EDGE: return GL_CLAMP_TO_EDGE;
+			case HZ_CLAMP_TO_BORDER: return GL_CLAMP_TO_BORDER;
+			case HZ_NEAREST: return GL_NEAREST;
+			case HZ_LINEAR: return GL_LINEAR;
+			case HZ_NEAREST_MIPMAP_NEAREST: return GL_NEAREST_MIPMAP_NEAREST;
+			case HZ_LINEAR_MIPMAP_NEAREST: return GL_LINEAR_MIPMAP_NEAREST;
+			case HZ_NEAREST_MIPMAP_LINEAR: return GL_NEAREST_MIPMAP_LINEAR;
+			case HZ_LINEAR_MIPMAP_LINEAR: return GL_LINEAR_MIPMAP_LINEAR;
+		}
+		HZ_CORE_ASSERT(0, "Unsupported Param");
+		return 0;
+	}
+
 }

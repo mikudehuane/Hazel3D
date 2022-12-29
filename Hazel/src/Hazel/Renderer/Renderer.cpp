@@ -6,6 +6,7 @@
 namespace Hazel {
 
 	Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
+	Ref<ShaderLibrary> Renderer::m_ShaderLibrary = std::make_shared<ShaderLibrary>();
 	
 	void Renderer::Init()
 	{
