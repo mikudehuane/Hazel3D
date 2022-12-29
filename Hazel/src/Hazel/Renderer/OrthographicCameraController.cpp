@@ -49,7 +49,7 @@ namespace Hazel {
 
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
-		m_ZoomLevel -= 0.1 * e.GetYOffset();
+		m_ZoomLevel -= 0.1f * e.GetYOffset();
 		ClampZoomLevel();
 		m_Camera.SetProjection(
 			-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel,
