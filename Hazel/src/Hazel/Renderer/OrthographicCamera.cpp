@@ -12,6 +12,12 @@ namespace Hazel {
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
+	void OrthographicCamera::SetProjection(float left, float right, float bottom, float top)
+	{
+		m_ProjectionMatrix = glm::ortho(left, right, bottom, top);
+		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
+	}
+
 	void OrthographicCamera::RecalculateViewMatrix()
 	{
 		m_ViewMatrix = glm::translate(

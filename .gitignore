@@ -1,3 +1,4 @@
+*.baiduyun.uploading.cfg
 *.sln
 *.vcxproj
 *.vcxproj.filters
