@@ -25,7 +25,7 @@ namespace Hazel {
 
 		Renderer::Init();
 
-		m_ImGuiLayer = new ImGuiLayer();
+		m_ImGuiLayer = std::make_shared<ImGuiLayer>();
 		PushOverlay(m_ImGuiLayer);
 	}
 
@@ -33,13 +33,13 @@ namespace Hazel {
 	{
 	}
 
-	void Application::PushLayer(Layer* layer)
+	void Application::PushLayer(Ref<Layer> layer)
 	{
 		m_LayerStack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
-	void Application::PushOverlay(Layer* layer)
+	void Application::PushOverlay(Ref<Layer> layer)
 	{
 		m_LayerStack.PushOverlay(layer);
 		layer->OnAttach();
@@ -69,12 +69,12 @@ namespace Hazel {
 			
 			if (!m_Minimized)
 			{
-				for (Layer* layer : m_LayerStack)
+				for (Ref<Layer> layer : m_LayerStack)
 					layer->OnUpdate(timestep);
 			}
 
 			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStack)
+			for (Ref<Layer> layer : m_LayerStack)
 				layer->OnImGuiRender();
 			m_ImGuiLayer->End();
 
