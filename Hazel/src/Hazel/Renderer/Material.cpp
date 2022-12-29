@@ -1,6 +1,5 @@
 #include "hzpch.h"
 #include "Material.h"
-#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Hazel {
 
@@ -13,7 +12,6 @@ namespace Hazel {
 	{
 		texture->Bind(slot);
 		m_Shader->Bind();
-		//std::dynamic_pointer_cast<OpenGLShader>(m_Shader)->UploadUniformMat4("u_", slot);
 	}
 
 }

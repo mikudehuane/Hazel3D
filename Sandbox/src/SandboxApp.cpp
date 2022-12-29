@@ -2,13 +2,14 @@
 #include <Hazel/Core/EntryPoint.h>
 
 #include "Sandbox2D.h"
+#include "Sandbox3D.h"
 
 class Sandbox : public Hazel::Application
 {
 public:
 	Sandbox()
 	{
-		//PushLayer(new ExampleLayer());
+		//PushLayer(std::make_shared<Sandbox3D>());
 		PushLayer(std::make_shared<Sandbox2D>());
 	}
 

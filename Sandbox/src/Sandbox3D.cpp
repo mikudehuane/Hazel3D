@@ -65,8 +65,8 @@ Sandbox3D::Sandbox3D()
 	m_ChernoLogoTexture->Bind();
 	m_ChernoLogoTexture->SetTexWrapT(HZ_MIRRORED_REPEAT);
 
-	std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
-	std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
+	textureShader->Bind();
+	textureShader->SetInt("u_Texture", 0);
 }
 
 void Sandbox3D::OnUpdate(Hazel::Timestep ts)
@@ -82,8 +82,8 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 
 	auto flatColorShader = Hazel::Renderer::GetShaderLib()->Get("FlatColor");
 
-	std::dynamic_pointer_cast<Hazel::OpenGLShader>(flatColorShader)->Bind();
-	std::dynamic_pointer_cast<Hazel::OpenGLShader>(flatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+	flatColorShader->Bind();
+	flatColorShader->SetFloat3("u_Color", m_SquareColor);
 
 	for (int y = 0; y < 20; ++y)
 	{
