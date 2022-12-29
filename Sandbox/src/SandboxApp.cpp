@@ -11,7 +11,7 @@ class ExampleLayer : public Hazel::Layer
 {
 public:
 	ExampleLayer()
-		: m_CameraController(1280.0f / 720.0f, true),
+		: m_CameraController((float)Hazel::DEFAULT_WINDOW_WIDTH / (float)Hazel::DEFAULT_WINDOW_HEIGHT, true),
 		Layer("Example"), m_SquarePosition(0.0f)
 	{
 		m_SquareVA = Hazel::VertexArray::Create();

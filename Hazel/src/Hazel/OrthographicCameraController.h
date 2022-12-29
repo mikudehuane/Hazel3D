@@ -8,7 +8,7 @@
 
 namespace Hazel {
 	
-	static const float MAX_ZOOM_LEVEL = 10.0f;
+	static const float MAX_ZOOM_LEVEL = INFINITY;
 	static const float MIN_ZOOM_LEVEL = 0.1f;
 	
 	class OrthographicCameraController
@@ -22,9 +22,17 @@ namespace Hazel {
 
 		inline OrthographicCamera& GetCamera() { return m_Camera; }
 		inline const OrthographicCamera& GetCamera() const { return m_Camera; }
+
+		inline float GetZoomLevel() const { return m_ZoomLevel; }
+		inline void SetZoomLevel(float level) { m_ZoomLevel = level; }
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);
+
+		inline void ClampZoomLevel()
+		{
+			m_ZoomLevel = std::max(std::min(MAX_ZOOM_LEVEL, m_ZoomLevel), MIN_ZOOM_LEVEL);
+		}
 	private:
 		float m_AspectRatio;
 		float m_ZoomLevel = 1.0f;

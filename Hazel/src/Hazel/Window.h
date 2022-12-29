@@ -7,6 +7,9 @@
 
 namespace Hazel {
 
+	const int DEFAULT_WINDOW_WIDTH = 1280;
+	const int DEFAULT_WINDOW_HEIGHT = 720;
+
 	struct WindowProps
 	{
 		std::string Title;
@@ -14,8 +17,8 @@ namespace Hazel {
 		unsigned int Height;
 
 		WindowProps(const std::string& title = "Hazel Engine",
-			        unsigned int width = 1280,
-			        unsigned int height = 720)
+			        unsigned int width = DEFAULT_WINDOW_WIDTH,
+			        unsigned int height = DEFAULT_WINDOW_HEIGHT)
 			: Title(title), Width(width), Height(height)
 		{
 		}
