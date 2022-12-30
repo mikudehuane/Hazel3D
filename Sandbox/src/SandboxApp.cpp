@@ -9,8 +9,8 @@ class Sandbox : public Hazel::Application
 public:
 	Sandbox()
 	{
-		//PushLayer(std::make_shared<Sandbox3D>());
-		PushLayer(std::make_shared<Sandbox2D>());
+		//PushLayer(Hazel::CreateRef<Sandbox3D>());
+		PushLayer(Hazel::CreateRef<Sandbox2D>());
 	}
 
 	~Sandbox()

@@ -12,13 +12,13 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
-	m_TexMaterial = std::make_shared<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Material"));
+	m_TexMaterial = Hazel::CreateRef<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Material"));
 	auto texture = Hazel::Texture2D::Create("Sandbox/assets/textures/laugh.png");
 	m_TexMaterial->SetTexture(texture);
 
-	m_ColorMaterial = std::make_shared<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Material"));
+	m_ColorMaterial = Hazel::CreateRef<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Material"));
 
-	m_MixedMaterial = std::make_shared<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Material"));
+	m_MixedMaterial = Hazel::CreateRef<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Material"));
 	texture = Hazel::Texture2D::Create("Sandbox/assets/textures/container.png");
 	m_MixedMaterial->SetTexture(texture);
 }

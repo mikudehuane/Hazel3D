@@ -25,7 +25,7 @@ namespace Hazel {
 
 		Renderer::Init();
 
-		m_ImGuiLayer = std::make_shared<ImGuiLayer>();
+		m_ImGuiLayer = CreateRef<ImGuiLayer>();
 		PushOverlay(m_ImGuiLayer);
 	}
 
