@@ -20,6 +20,7 @@ private:
 	// TODO(cherno): temp
 	Hazel::Ref<Hazel::VertexArray> m_SquareVA;
 	Hazel::Ref<Hazel::Shader> m_FlatColorShader;
+	Hazel::Ref<Hazel::Texture2D> m_Texture;
 
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 };
