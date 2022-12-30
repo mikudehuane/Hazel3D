@@ -21,14 +21,6 @@ public:
 	virtual void OnEvent(Hazel::Event& e) override;
 
 private:
-	Hazel::Ref<Hazel::VertexArray> m_SquareVA;
-	Hazel::Ref<Hazel::Texture2D> m_Texture, m_ChernoLogoTexture;
-
 	Hazel::OrthographicCameraController m_CameraController;
-
-	glm::vec3 m_SquarePosition;
-	float m_SquareMoveSpeed = 1.0f;
-
-	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
 };
 
