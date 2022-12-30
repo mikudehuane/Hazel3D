@@ -1,14 +1,19 @@
 #include "hzpch.h"
 #include "Renderer.h"
+#include "Renderer2D.h"
 
 namespace Hazel {
 
 	Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
-	Ref<ShaderLibrary> Renderer::m_ShaderLibrary = std::make_shared<ShaderLibrary>();
+	Ref<ShaderLibrary> Renderer::s_ShaderLibrary = CreateRef<ShaderLibrary>();
+	Ref<Texture2D> Renderer::s_WhiteTexture2D;
 	
 	void Renderer::Init()
 	{
-		RenderCommand::Init();
+		Renderer2D::Init();
+
+		uint32_t whiteTextureData = 0xffffffff;
+		s_WhiteTexture2D = Texture2D::Create(1, 1, &whiteTextureData);
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)

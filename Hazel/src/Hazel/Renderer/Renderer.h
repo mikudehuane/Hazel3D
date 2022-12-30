@@ -4,6 +4,7 @@
 
 #include "OrthographicCamera.h"
 #include "Shader.h"
+#include "Texture.h"
 
 namespace Hazel {
 
@@ -19,7 +20,9 @@ namespace Hazel {
 		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));
 
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
-		inline static Ref<ShaderLibrary> GetShaderLib() { return m_ShaderLibrary; }
+
+		inline static Ref<ShaderLibrary> GetShaderLib() { return s_ShaderLibrary; }
+		inline static Ref<Texture2D> GetWhiteTexture2D() { return s_WhiteTexture2D; }
 	private:
 		struct SceneData
 		{
@@ -27,7 +30,9 @@ namespace Hazel {
 		};
 
 		static SceneData* m_SceneData;
-		static Ref<ShaderLibrary> m_ShaderLibrary;
+
+		static Ref<ShaderLibrary> s_ShaderLibrary;
+		static Ref<Texture2D> s_WhiteTexture2D;
 	};
 	
 }
