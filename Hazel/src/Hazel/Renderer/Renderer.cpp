@@ -23,18 +23,34 @@ namespace Hazel {
 
 	void Renderer::BeginScene(const OrthographicCamera& camera)
 	{
-		m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+		for (auto& [shaderName, shader] : Renderer::GetShaderLib()->GetShaders())
+		{
+			shader->Bind();
+			shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		}
+	}
+
+	void Renderer::BeginScene(const PerspectiveCamera& camera)
+	{
+		for (auto& [shaderName, shader] : Renderer::GetShaderLib()->GetShaders())
+		{
+			shader->Bind();
+			shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		}
 	}
 
 	void Renderer::EndScene()
 	{
 	}
 
-	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
+	void Renderer::Submit(
+		const Ref<VertexArray>& vertexArray,
+		const Ref<Material>& material,
+		const glm::mat4& modelTransform
+	)
 	{
-		shader->Bind();
-		shader->SetMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
-		shader->SetMat4("u_Transform", transform);
+		material->Bind();
+		material->GetShader()->SetMat4("u_Transform", modelTransform);
 		
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);

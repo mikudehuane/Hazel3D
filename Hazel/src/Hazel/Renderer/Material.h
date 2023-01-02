@@ -16,6 +16,8 @@ namespace Hazel {
 		// add color as mixed, mix with factor mixAlpha
 		void SetColor(const glm::vec4& color, float mixAlpha = 1.0f);
 
+		inline const Ref<Shader>& GetShader() const { return m_Shader; }
+
 		void Bind();
 	private:
 		static const int s_TextureSlot = 0;

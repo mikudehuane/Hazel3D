@@ -25,5 +25,6 @@
 
 #include "Hazel/Renderer/OrthographicCamera.h"
 #include "Hazel/Renderer/OrthographicCameraController.h"
+#include "Hazel/Renderer/PerspectiveCamera.h"
 
 #include "Hazel/ImGui/ImGuiLayer.h"
