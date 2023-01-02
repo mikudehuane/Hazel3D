@@ -21,16 +21,7 @@ namespace Hazel {
 		RenderCommand::SetViewport(0, 0, width, height);
 	}
 
-	void Renderer::BeginScene(const OrthographicCamera& camera)
-	{
-		for (auto& [shaderName, shader] : Renderer::GetShaderLib()->GetShaders())
-		{
-			shader->Bind();
-			shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-		}
-	}
-
-	void Renderer::BeginScene(const PerspectiveCamera& camera)
+	void Renderer::BeginScene(const Camera& camera)
 	{
 		for (auto& [shaderName, shader] : Renderer::GetShaderLib()->GetShaders())
 		{

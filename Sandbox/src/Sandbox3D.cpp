@@ -3,10 +3,12 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Sandbox3D::Sandbox3D()
-	: m_Camera((float)Hazel::DEFAULT_WINDOW_WIDTH / (float)Hazel::DEFAULT_WINDOW_HEIGHT),
+	: m_Camera(true),
 	//m_CameraController((float)Hazel::DEFAULT_WINDOW_WIDTH / (float)Hazel::DEFAULT_WINDOW_HEIGHT, true),
 	Layer("Sandbox3D")
 {
+	float aspectRatio = (float)Hazel::DEFAULT_WINDOW_WIDTH / (float)Hazel::DEFAULT_WINDOW_HEIGHT;
+	m_Camera.SetPerspectiveProjection(aspectRatio, 45.0f, 0.1f, 1000.0f);
 }
 
 void Sandbox3D::OnAttach()
@@ -46,6 +48,17 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 
 	Hazel::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 	Hazel::RenderCommand::Clear();
+	
+	m_Camera.SetPerspective(m_isPerspective);
+	float aspectRatio = (float)Hazel::DEFAULT_WINDOW_WIDTH / (float)Hazel::DEFAULT_WINDOW_HEIGHT;
+	m_Camera.SetOrthographicProjection(
+		-aspectRatio * m_ZoomLevel,
+		aspectRatio * m_ZoomLevel,
+		-m_ZoomLevel,
+		m_ZoomLevel,
+		0.1f,
+		1000.0f
+	);
 
 	Hazel::Renderer::BeginScene(m_Camera);
 	Hazel::Renderer::Submit(
@@ -58,7 +71,9 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 void Sandbox3D::OnImGuiRender()
 {
 	ImGui::Begin("Settings");
-	ImGui::DragFloat3("Square Position", glm::value_ptr(m_SquarePos));
+	ImGui::Checkbox("Perspective", &m_isPerspective);
+	ImGui::SliderFloat("Zoom Level", &m_ZoomLevel, 1.0f, 100.0f);
+	ImGui::DragFloat3("Square Position", glm::value_ptr(m_SquarePos), 0.1f);
 	ImGui::End();
 }
 
