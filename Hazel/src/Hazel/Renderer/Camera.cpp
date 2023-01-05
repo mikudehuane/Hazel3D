@@ -8,7 +8,8 @@ namespace Hazel {
 	Camera::Camera(bool isPerspective, float aspectRatio, float fovy, float zNearPerspective, float zFarPerspective, float left, float right, float bottom, float top, float zNearOrthographic, float zFarOrthographic)
 		: m_PerspectiveProjectionMatrix(glm::perspective(glm::radians(fovy), aspectRatio, zNearPerspective, zFarPerspective)),
 		  m_OrthographicProjectionMatrix(glm::ortho(left, right, bottom, top, zNearOrthographic, zFarOrthographic)),
-		  m_ViewMatrix(1.0f), m_Position(0.0f), m_IsPerspective(isPerspective)
+		  m_ViewMatrix(1.0f), m_Position(0.0f),
+		  m_IsPerspective(isPerspective), m_RotationQuat(1.0f, 0.0f, 0.0f, 0.0f)
 	{
 		if (m_IsPerspective)
 		{
@@ -47,11 +48,23 @@ namespace Hazel {
 		m_PerspectiveProjectionMatrix = glm::perspective(glm::radians(fovy), aspectRatio, zNear, zFar);
 		m_ViewProjectionMatrix = *m_ProjectionMatrix * m_ViewMatrix;
 	}
-	
-	void Camera::RecalculateViewMatrix()
+
+	void Camera::SetPosition(const glm::vec3& position)
 	{
-		m_ViewMatrix = glm::translate(
-			glm::rotate(glm::mat4(1.0f), -glm::radians(m_Rotation), glm::vec3(0, 0, 1)), -m_Position);
+		m_Position = position;
+		RecalculateViewProjectionMatrix();
+	}
+
+	void Camera::SetRotation(const glm::quat& rotationQuat)
+	{
+		m_RotationQuat = rotationQuat;
+		RecalculateViewProjectionMatrix();
+	}
+	
+	void Camera::RecalculateViewProjectionMatrix()
+	{
+		glm::mat4 viewRotationMatrix = glm::mat4_cast(m_RotationQuat);
+		m_ViewMatrix = glm::translate(viewRotationMatrix, -m_Position);
 
 		m_ViewProjectionMatrix = *m_ProjectionMatrix * m_ViewMatrix;
 	}

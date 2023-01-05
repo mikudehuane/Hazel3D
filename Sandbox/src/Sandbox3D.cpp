@@ -59,6 +59,9 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 		0.1f,
 		1000.0f
 	);
+	m_Camera.SetPosition(m_CameraPos);
+	m_CameraAxis = glm::normalize(m_CameraAxis);
+	m_Camera.SetRotation(glm::angleAxis(glm::radians(m_CameraAngle), m_CameraAxis));
 
 	Hazel::Renderer::BeginScene(m_Camera);
 	Hazel::Renderer::Submit(
@@ -74,6 +77,9 @@ void Sandbox3D::OnImGuiRender()
 	ImGui::Checkbox("Perspective", &m_isPerspective);
 	ImGui::SliderFloat("Zoom Level", &m_ZoomLevel, 1.0f, 100.0f);
 	ImGui::DragFloat3("Square Position", glm::value_ptr(m_SquarePos), 0.1f);
+	ImGui::DragFloat3("Camera Position", glm::value_ptr(m_CameraPos), 0.1f);
+	ImGui::DragFloat3("Camera Axis", glm::value_ptr(m_CameraAxis), 0.1f);
+	ImGui::SliderFloat("Camera Angle", &m_CameraAngle, -360.0f, 360.0f);
 	ImGui::End();
 }
 

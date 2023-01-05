@@ -22,6 +22,9 @@ private:
 	Hazel::Camera m_Camera;
 	bool m_isPerspective = true;
 	float m_ZoomLevel = 1.0f;  // works for orthographic camera only
+	glm::vec3 m_CameraPos = glm::vec3(0.0f);
+	glm::vec3 m_CameraAxis = glm::vec3(0.0f, 0.0f, -1.0f);
+	float m_CameraAngle = 0.0f;
 
 	Hazel::Ref<Hazel::VertexArray> m_SquareVA;
 	Hazel::Ref<Hazel::Material> m_TexMaterial;
