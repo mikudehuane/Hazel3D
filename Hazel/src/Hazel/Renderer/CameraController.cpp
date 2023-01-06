@@ -37,7 +37,6 @@ namespace Hazel {
 
 	void CameraController::OnEvent(Event& e)
 	{
-		HZ_TRACE("CameraController::OnEvent, event type: {0}", e.ToString());
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(HZ_BIND_EVENT_FN(CameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizeEvent>(HZ_BIND_EVENT_FN(CameraController::OnWindowResized));
@@ -74,7 +73,7 @@ namespace Hazel {
 
 	glm::mat4 CameraController::ComputeOrthographicProjectionMatrix()
 	{
-		float halfHeight = m_CameraPosition.z * std::tan(glm::radians(m_Fovy) / 2.0f);
+		float halfHeight = glm::length(m_CameraPosition) * std::tan(glm::radians(m_Fovy) / 2.0f);
 		halfHeight = std::max(halfHeight, 0.1f);  // clamp
 
 		return glm::ortho(
@@ -102,9 +101,8 @@ namespace Hazel {
 	bool CameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
 		m_CameraPosition += m_CameraTranslationSpeedZ * e.GetYOffset() * m_CameraZ;
-
-		m_Camera->SetPosition(m_CameraPosition);
-
+		
+		SetPosition(m_CameraPosition);
 		return true;
 	}
 
