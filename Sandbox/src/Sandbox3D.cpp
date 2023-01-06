@@ -2,6 +2,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <numeric>
+
 Sandbox3D::Sandbox3D(): 
 	m_CameraController(
 		true, (float)Hazel::DEFAULT_WINDOW_WIDTH / (float)Hazel::DEFAULT_WINDOW_HEIGHT
@@ -15,11 +17,48 @@ void Sandbox3D::OnAttach()
 	// vertex array
 	m_SquareVA = Hazel::VertexArray::Create();
 	// vertex buffer
-	float squareVertices[4 * 5] = {
-		-3.0f, -3.0f, 0.0f, 0.0f, 0.0f,
-		 3.0f, -3.0f, 0.0f, 1.0f, 0.0f,
-		 3.0f,  3.0f, 0.0f, 1.0f, 1.0f,
-		-3.0f,  3.0f, 0.0f, 0.0f, 1.0f
+	float squareVertices[] = {
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
 	Hazel::Ref<Hazel::VertexBuffer> squareVB;
 	squareVB = Hazel::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
@@ -29,9 +68,10 @@ void Sandbox3D::OnAttach()
 		});
 	m_SquareVA->AddVertexBuffer(squareVB);
 	// index buffer
-	uint32_t squareIndices[] = { 0, 1, 2, 2, 3, 0 };
+	std::array<uint32_t, 36> squareIndices;
+	std::iota(std::begin(squareIndices), std::end(squareIndices), 0);
 	Hazel::Ref<Hazel::IndexBuffer> squareIB;
-	squareIB = Hazel::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
+	squareIB = Hazel::IndexBuffer::Create(squareIndices.data(), sizeof(squareIndices) / sizeof(uint32_t));
 	m_SquareVA->SetIndexBuffer(squareIB);
 
 	// material
@@ -72,6 +112,8 @@ void Sandbox3D::OnImGuiRender()
 	const glm::quat& cameraRotation = m_CameraController.GetCamera().GetRotation();
 	ImGui::Text("Camera Rotation (wxyz): (%.2f, %.2f, %.2f, %.2f)", cameraRotation.w, cameraRotation.x, cameraRotation.y, cameraRotation.z);
 	ImGui::Text("Camera Rotation Norm: %.2f", glm::length(cameraRotation));
+	const glm::vec3& cameraZ = m_CameraController.GetCameraZ();
+	ImGui::Text("Camera Z Axis: (%.2f, %.2f, %.2f)", cameraZ.x, cameraZ.y, cameraZ.z);
 	ImGui::End();
 }
 

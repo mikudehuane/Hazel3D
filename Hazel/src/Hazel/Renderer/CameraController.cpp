@@ -8,6 +8,8 @@
 
 #include <cmath>
 
+#include <glm/gtc/quaternion.hpp>
+
 namespace Hazel {
 
 	CameraController::CameraController(bool isPerspective, float aspectRatio, float fovy, float zNear, float zFar)
@@ -99,7 +101,7 @@ namespace Hazel {
 
 	bool CameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
-		m_CameraPosition.z -= m_CameraTranslationSpeedZ * e.GetYOffset();
+		m_CameraPosition += m_CameraTranslationSpeedZ * e.GetYOffset() * m_CameraZ;
 
 		m_Camera->SetPosition(m_CameraPosition);
 
@@ -151,8 +153,8 @@ namespace Hazel {
 		{
 			float dx = e.GetX() - m_MouseButtonPressedPosition.x;
 			float dy = e.GetY() - m_MouseButtonPressedPosition.y;
-			m_CameraPosition.x -= dx * m_CameraTranslationSpeedXY;
-			m_CameraPosition.y += dy * m_CameraTranslationSpeedXY;
+			m_CameraPosition -= dx * m_CameraTranslationSpeedXY * m_CameraX;
+			m_CameraPosition += dy * m_CameraTranslationSpeedXY * m_CameraY;
 			m_Camera->SetPosition(m_CameraPosition);
 			m_MouseButtonPressedPosition = { e.GetX(), e.GetY() };
 			return true;
@@ -171,10 +173,10 @@ namespace Hazel {
 			glm::quat addedRotation = rotationX * rotationY;
 
 			// update the camera rotation
-			glm::mat3 addedRotationMatrix = glm::mat3_cast(addedRotation);
-			m_CameraX = addedRotationMatrix * m_CameraX;
-			m_CameraY = addedRotationMatrix * m_CameraY;
-			m_CameraZ = addedRotationMatrix * m_CameraZ;
+			glm::mat3 cameraRotationMatrix = glm::mat3_cast(glm::conjugate(addedRotation));
+			m_CameraX = cameraRotationMatrix * m_CameraX;
+			m_CameraY = cameraRotationMatrix * m_CameraY;
+			m_CameraZ = cameraRotationMatrix * m_CameraZ;
 
 			// update the view projection
 			glm::quat cameraRotation = addedRotation * m_Camera->GetRotation();

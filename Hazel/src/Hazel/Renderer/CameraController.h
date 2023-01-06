@@ -31,6 +31,10 @@ namespace Hazel {
 
 		void SetPosition(const glm::vec3& position);
 		void SetPerspective(bool isPerspective);
+
+		inline const glm::vec3& GetCameraX() const { return m_CameraX; }
+		inline const glm::vec3& GetCameraY() const { return m_CameraY; }
+		inline const glm::vec3& GetCameraZ() const { return m_CameraZ; }
 	private:
 		glm::mat4 ComputePerspectiveProjectionMatrix();
 		glm::mat4 ComputeOrthographicProjectionMatrix();
@@ -56,7 +60,7 @@ namespace Hazel {
 		float m_CameraRotationSpeedXY = 0.1f;
 
 		//---------------- camera states ---------------
-		// xyz-axis of camera
+		// xyz-axis of camera (used for translation)
 		glm::vec3 m_CameraX = { 1.0f, 0.0f, 0.0f };
 		glm::vec3 m_CameraY = { 0.0f, 1.0f, 0.0f };
 		glm::vec3 m_CameraZ = { 0.0f, 0.0f, -1.0f };
