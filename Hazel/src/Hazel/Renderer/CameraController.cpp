@@ -16,6 +16,12 @@ namespace Hazel {
 		: m_AspectRatio(aspectRatio), m_IsPerspective(isPerspective),
 		m_Fovy(fovy), m_Near(zNear), m_Far(zFar)
 	{
+		// zMiddle is the default camera position
+		float zMiddle = std::sqrt(m_Near * m_Far);
+		// set zoom level to the height at z=0
+		float halfHeight = zMiddle * std::tan(glm::radians(m_Fovy) / 2.0f);
+		m_ZoomLevel = std::max(halfHeight, m_ZoomMin);  // clamp
+
 		if (m_IsPerspective)
 		{
 			m_Camera = CreateScope<Camera>(ComputePerspectiveProjectionMatrix());
@@ -25,8 +31,6 @@ namespace Hazel {
 			m_Camera = CreateScope<Camera>(ComputeOrthographicProjectionMatrix());
 		}
 		
-		// reset the position
-		float zMiddle = std::sqrt(m_Near * m_Far);
 		SetPosition({0.0f, 0.0f, zMiddle});
 	}
 
@@ -48,12 +52,6 @@ namespace Hazel {
 	{
 		m_CameraPosition = position;
 		m_Camera->SetPosition(m_CameraPosition);
-		if (!m_IsPerspective) // reset the orthographic projection
-		{
-			glm::mat4 projectionMatrix = ComputeOrthographicProjectionMatrix();
-			// TODO(islander): using move constructor may save one copy (need to modify the glm lib)
-			m_Camera->SetProjection(projectionMatrix);
-		}
 	}
 
 	void CameraController::SetPerspective(bool isPerspective)
@@ -72,12 +70,9 @@ namespace Hazel {
 
 	glm::mat4 CameraController::ComputeOrthographicProjectionMatrix()
 	{
-		float halfHeight = glm::length(m_CameraPosition) * std::tan(glm::radians(m_Fovy) / 2.0f);
-		halfHeight = std::max(halfHeight, 0.1f);  // clamp
-
 		return glm::ortho(
-			-m_AspectRatio * halfHeight, m_AspectRatio * halfHeight, 
-			-halfHeight, halfHeight, 
+			-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel,
+			-m_ZoomLevel, m_ZoomLevel,
 			m_Near, m_Far
 		);
 	}
@@ -87,7 +82,6 @@ namespace Hazel {
 		if (m_IsPerspective)
 		{
 			glm::mat4 projectionMatrix = ComputePerspectiveProjectionMatrix();
-			// TODO(islander): perspective projection is usually invariant, cache it in class
 			m_Camera->SetProjection(projectionMatrix);
 		}
 		else
@@ -99,9 +93,19 @@ namespace Hazel {
 
 	bool CameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
-		m_CameraPosition += m_CameraTranslationSpeedZ * e.GetYOffset() * m_CameraZ;
-		
-		SetPosition(m_CameraPosition);
+		if (m_IsPerspective)
+		{
+			m_Fovy -= e.GetYOffset() * m_FovySensitiviy;
+			m_Fovy = std::max(m_Fovy, m_FovyMin);
+			m_Fovy = std::min(m_Fovy, m_FovyMax);
+			m_Camera->SetProjection(ComputePerspectiveProjectionMatrix());
+		}
+		else
+		{
+			m_ZoomLevel -= e.GetYOffset() * m_ZoomSensitivity;
+			m_ZoomLevel = std::max(m_ZoomLevel, m_ZoomMin);
+			m_Camera->SetProjection(ComputeOrthographicProjectionMatrix());
+		}
 		return true;
 	}
 

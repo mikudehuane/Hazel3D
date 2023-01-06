@@ -53,13 +53,17 @@ namespace Hazel {
 		bool m_IsPerspective;
 		float m_AspectRatio;
 		float m_Fovy, m_Near, m_Far;
+		float m_ZoomLevel;
 		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
 		Scope<Camera> m_Camera;
 
 		//---------------- camera speeds ---------------
-		float m_CameraTranslationSpeedXY = 0.01f;  // relative to pixel
-		float m_CameraTranslationSpeedZ = 0.1f;  // relative to scrolling
+		// relative to pixel
+		float m_CameraTranslationSpeedXY = 0.01f;  
 		float m_CameraRotationSpeedXY = 0.1f;
+		// relative to scrolling
+		float m_ZoomSensitivity = 0.1f, m_ZoomMin = 0.1f;  
+		float m_FovySensitiviy = 1.0f, m_FovyMax = 179.0f, m_FovyMin = 1.0f;
 
 		//---------------- camera states ---------------
 		// xyz-axis of camera (used for translation)
