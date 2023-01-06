@@ -21,8 +21,6 @@ public:
 private:
 	Hazel::CameraController m_CameraController;
 	bool m_isPerspective = true;
-	glm::vec3 m_CameraAxis = glm::vec3(0.0f, 0.0f, -1.0f);
-	float m_CameraAngle = 0.0f;
 
 	Hazel::Ref<Hazel::VertexArray> m_SquareVA;
 	Hazel::Ref<Hazel::Material> m_TexMaterial;

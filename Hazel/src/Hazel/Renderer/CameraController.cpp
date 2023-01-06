@@ -35,9 +35,13 @@ namespace Hazel {
 
 	void CameraController::OnEvent(Event& e)
 	{
+		HZ_TRACE("CameraController::OnEvent, event type: {0}", e.ToString());
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(HZ_BIND_EVENT_FN(CameraController::OnMouseScrolled));
-		//dispatcher.Dispatch<WindowResizeEvent>(HZ_BIND_EVENT_FN(CameraController::OnWindowResized));
+		dispatcher.Dispatch<WindowResizeEvent>(HZ_BIND_EVENT_FN(CameraController::OnWindowResized));
+		dispatcher.Dispatch<MouseButtonPressedEvent>(HZ_BIND_EVENT_FN(CameraController::OnMouseButtonPressed));
+		dispatcher.Dispatch<MouseButtonReleasedEvent>(HZ_BIND_EVENT_FN(CameraController::OnMouseButtonReleased));
+		dispatcher.Dispatch<MouseMovedEvent>(HZ_BIND_EVENT_FN(CameraController::OnMouseMoved));
 	}
 
 	void CameraController::SetPosition(const glm::vec3& position)
@@ -57,18 +61,7 @@ namespace Hazel {
 		if (isPerspective != m_IsPerspective)  // reset the projection matrix only if the state changes
 		{
 			m_IsPerspective = isPerspective;
-			
-			if (m_IsPerspective)
-			{
-				glm::mat4 projectionMatrix = ComputePerspectiveProjectionMatrix();
-				// TODO(islander): perspective projection is usually invariant, cache it in class
-				m_Camera->SetProjection(projectionMatrix);
-			}
-			else
-			{
-				glm::mat4 projectionMatrix = ComputeOrthographicProjectionMatrix();
-				m_Camera->SetProjection(projectionMatrix);
-			}
+			ResetProjectionMatrix();
 		}
 	}
 
@@ -89,31 +82,107 @@ namespace Hazel {
 		);
 	}
 
+	void CameraController::ResetProjectionMatrix()
+	{
+		if (m_IsPerspective)
+		{
+			glm::mat4 projectionMatrix = ComputePerspectiveProjectionMatrix();
+			// TODO(islander): perspective projection is usually invariant, cache it in class
+			m_Camera->SetProjection(projectionMatrix);
+		}
+		else
+		{
+			glm::mat4 projectionMatrix = ComputeOrthographicProjectionMatrix();
+			m_Camera->SetProjection(projectionMatrix);
+		}
+	}
+
 	bool CameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
-		m_CameraPosition.z -= 0.1f * e.GetYOffset();
+		m_CameraPosition.z -= m_CameraTranslationSpeedZ * e.GetYOffset();
 
 		m_Camera->SetPosition(m_CameraPosition);
 
 		return true;
 	}
 
-	//bool CameraController::OnWindowResized(WindowResizeEvent& e)
-	//{
-	//	m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
+	bool CameraController::OnWindowResized(WindowResizeEvent& e)
+	{
+		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
+		ResetProjectionMatrix();
+		return false;
+	}
 
-	//	// Set for orthographic
-	//	m_Camera.SetOrthographicProjection(
-	//		-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel,
-	//		-m_ZoomLevel, m_ZoomLevel, m_Near, m_Far
-	//	);
-	//	
-	//	// Set for perspective
-	//	m_Camera.SetPerspectiveProjection(
-	//		m_AspectRatio, m_Fovy, m_Near, m_Far
-	//	);
+	bool CameraController::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+	{
+		if (m_MouseButtonPressed == HZ_MOUSE_BUTTON_NONE)  // ignore multiple buttons
+		{
+			m_MouseButtonPressed = e.GetMouseButton();
+			m_MouseButtonPressedPosition = { Input::GetMouseX(), Input::GetMouseY() };
+		}
+		return true;
+	}
 
-	//	return true;
-	//}
+	bool CameraController::OnMouseButtonReleased(MouseButtonReleasedEvent& e)
+	{
+		if (m_MouseButtonPressed == e.GetMouseButton())  // only handle current button
+		{
+			m_MouseButtonPressed = HZ_MOUSE_BUTTON_NONE;
+		}
+		return true;
+	}
+
+	bool CameraController::OnMouseMoved(MouseMovedEvent& e)
+	{
+		// check for mouse state
+		if (m_MouseButtonPressed != HZ_MOUSE_BUTTON_NONE)
+		{
+			if (!Input::IsMouseButtonPressed(m_MouseButtonPressed))
+			{
+				HZ_CORE_WARN("CameraController::OnMouseMoved: Key {0} is not pressed, reset m_MouseButtonPressed to HZ_MOUSE_BUTTON_NONE.", m_MouseButtonPressed);
+				HZ_CORE_ASSERT(0, "CameraController::OnMouseMoved: Key {0} is not pressed, reset m_MouseButtonPressed to HZ_MOUSE_BUTTON_NONE.", m_MouseButtonPressed);
+				m_MouseButtonPressed = HZ_MOUSE_BUTTON_NONE;
+			}
+		}
+
+		switch (m_MouseButtonPressed)
+		{
+		case HZ_MOUSE_BUTTON_MIDDLE:  // translation
+		{
+			float dx = e.GetX() - m_MouseButtonPressedPosition.x;
+			float dy = e.GetY() - m_MouseButtonPressedPosition.y;
+			m_CameraPosition.x -= dx * m_CameraTranslationSpeedXY;
+			m_CameraPosition.y += dy * m_CameraTranslationSpeedXY;
+			m_Camera->SetPosition(m_CameraPosition);
+			m_MouseButtonPressedPosition = { e.GetX(), e.GetY() };
+			return true;
+		}
+		case HZ_MOUSE_BUTTON_RIGHT:  // rotation
+		{
+			float dx = e.GetX() - m_MouseButtonPressedPosition.x;
+			float dy = e.GetY() - m_MouseButtonPressedPosition.y;
+			m_MouseButtonPressedPosition = { e.GetX(), e.GetY() };
+
+			// compute the added rotation
+			// horizental rotation: around the word y axis
+			glm::quat rotationY = glm::angleAxis(glm::radians(dx * m_CameraRotationSpeedXY), m_CameraY);
+			// vertical rotation: around the current x axis
+			glm::quat rotationX = glm::angleAxis(glm::radians(dy * m_CameraRotationSpeedXY), glm::vec3(1.0f, 0.0f, 0.0f));
+			glm::quat addedRotation = rotationX * rotationY;
+
+			// update the camera rotation
+			glm::mat3 addedRotationMatrix = glm::mat3_cast(addedRotation);
+			m_CameraX = addedRotationMatrix * m_CameraX;
+			m_CameraY = addedRotationMatrix * m_CameraY;
+			m_CameraZ = addedRotationMatrix * m_CameraZ;
+
+			// update the view projection
+			glm::quat cameraRotation = addedRotation * m_Camera->GetRotation();
+			m_Camera->SetRotation(cameraRotation);
+			return true;
+		}
+		default: return false;
+		}
+	}
 
 }

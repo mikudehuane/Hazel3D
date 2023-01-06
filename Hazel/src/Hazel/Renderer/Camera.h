@@ -12,11 +12,12 @@ namespace Hazel {
 		
 		void SetProjection(const glm::mat4& projectionMatrix);
 
-		const glm::vec3& GetPosition() const { return m_Position; }
+		inline const glm::vec3& GetPosition() const { return m_Position; }
 		void SetPosition(const glm::vec3& position);
 
 		// Set the rotation for the view
 		void SetRotation(const glm::quat& rotationQuat);
+		inline const glm::quat& GetRotation() { return m_RotationQuat; }
 
 		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
