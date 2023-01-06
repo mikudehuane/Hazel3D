@@ -32,7 +32,6 @@ namespace Hazel {
 
 	void CameraController::OnUpdate(Timestep ts)
 	{
-		
 	}
 
 	void CameraController::OnEvent(Event& e)

@@ -82,18 +82,15 @@ void Sandbox3D::OnAttach()
 
 void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 {
-	// TODO(islander)
-	//m_CameraController.OnUpdate(ts);
+	m_CameraController.OnUpdate(ts);
 
 	Hazel::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 	Hazel::RenderCommand::Clear();
 
-	Hazel::Camera& m_Camera = m_CameraController.GetCamera();
-	
 	m_CameraController.SetPerspective(m_isPerspective);
 	float aspectRatio = (float)Hazel::DEFAULT_WINDOW_WIDTH / (float)Hazel::DEFAULT_WINDOW_HEIGHT;
 
-	Hazel::Renderer::BeginScene(m_Camera);
+	Hazel::Renderer::BeginScene(m_CameraController.GetCamera());
 	glm::vec3 cubePositions[] = {
 		glm::vec3(0.0f,  0.0f,  0.0f),
 		glm::vec3(2.0f,  5.0f, -15.0f),
@@ -129,7 +126,7 @@ void Sandbox3D::OnImGuiRender()
 	ImGui::Begin("Settings");
 	ImGui::Checkbox("Perspective", &m_isPerspective);
 	ImGui::DragFloat3("Square Position", glm::value_ptr(m_SquarePos), 0.1f);
-	// show the current camera position
+	// show the current camera state
 	const glm::vec3& cameraPos = m_CameraController.GetCamera().GetPosition();
 	ImGui::Text("Camera Position: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
 	const glm::quat& cameraRotation = m_CameraController.GetCamera().GetRotation();
