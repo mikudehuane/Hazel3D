@@ -32,10 +32,6 @@ namespace Hazel {
 		void SetPosition(const glm::vec3& position);
 		void SetPerspective(bool isPerspective);
 
-		inline const glm::vec3& GetCameraX() const { return m_CameraX; }
-		inline const glm::vec3& GetCameraY() const { return m_CameraY; }
-		inline const glm::vec3& GetCameraZ() const { return m_CameraZ; }
-
 		inline const float GetZoomLevel() const { return m_ZoomLevel; }
 		inline const float GetFovy() const { return m_Fovy; }
 		inline const float GetAspectRatio() const { return m_AspectRatio; }
@@ -68,12 +64,6 @@ namespace Hazel {
 		// relative to scrolling
 		float m_ZoomSensitivity = 0.1f, m_ZoomMin = 0.1f;  
 		float m_FovySensitiviy = 1.0f, m_FovyMax = 179.0f, m_FovyMin = 1.0f;
-
-		//---------------- camera states ---------------
-		// xyz-axis of camera (used for translation)
-		glm::vec3 m_CameraX = { 1.0f, 0.0f, 0.0f };
-		glm::vec3 m_CameraY = { 0.0f, 1.0f, 0.0f };
-		glm::vec3 m_CameraZ = { 0.0f, 0.0f, -1.0f };
 
 		//---------------- input states ----------------
 		// Which button is currently pressed (record the first button that is pressed only)

@@ -133,14 +133,14 @@ void Sandbox3D::OnImGuiRender()
 	// show the current camera state
 	const glm::vec3& cameraPos = m_CameraController.GetCamera().GetPosition();
 	ImGui::Text("Position: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
-	ImGui::Text("AspectRatio: %.1f, Fovy: %.1f, Zoom: %.1f", m_CameraController.GetAspectRatio(), m_CameraController.GetFovy(), m_CameraController.GetZoomLevel());
+	ImGui::Text("AspectRatio: %.2f, Fovy: %.1f, Zoom: %.1f", m_CameraController.GetAspectRatio(), m_CameraController.GetFovy(), m_CameraController.GetZoomLevel());
 	const glm::quat& cameraRotation = m_CameraController.GetCamera().GetRotation();
 	ImGui::Text("Rotation: %.2f + %.2fi + %.2fj + %.2fk (Norm: %.2f)", cameraRotation.w, cameraRotation.x, cameraRotation.y, cameraRotation.z, glm::length(cameraRotation));
-	const glm::vec3& cameraX = m_CameraController.GetCameraX();
+	const glm::vec3& cameraX = m_CameraController.GetCamera().GetXAxis();
 	ImGui::Text("X: (%.2f, %.2f, %.2f)", cameraX.x, cameraX.y, cameraX.z);
-	const glm::vec3& cameraY = m_CameraController.GetCameraY();
+	const glm::vec3& cameraY = m_CameraController.GetCamera().GetYAxis();
 	ImGui::Text("Y: (%.2f, %.2f, %.2f)", cameraY.x, cameraY.y, cameraY.z);
-	const glm::vec3& cameraZ = m_CameraController.GetCameraZ();
+	const glm::vec3& cameraZ = m_CameraController.GetCamera().GetZAxis();
 	ImGui::Text("Z: (%.2f, %.2f, %.2f)", cameraZ.x, cameraZ.y, cameraZ.z);
 	ImGui::End();
 }

@@ -154,8 +154,8 @@ namespace Hazel {
 		{
 			float dx = e.GetX() - m_MouseButtonPressedPosition.x;
 			float dy = e.GetY() - m_MouseButtonPressedPosition.y;
-			m_CameraPosition -= dx * m_CameraTranslationSpeedXY * m_CameraX;
-			m_CameraPosition += dy * m_CameraTranslationSpeedXY * m_CameraY;
+			m_CameraPosition -= dx * m_CameraTranslationSpeedXY * m_Camera->GetXAxis();
+			m_CameraPosition += dy * m_CameraTranslationSpeedXY * m_Camera->GetYAxis();
 			m_Camera->SetPosition(m_CameraPosition);
 			m_MouseButtonPressedPosition = { e.GetX(), e.GetY() };
 			return true;
@@ -167,17 +167,11 @@ namespace Hazel {
 			m_MouseButtonPressedPosition = { e.GetX(), e.GetY() };
 
 			// compute the added rotation
-			// horizental rotation: around the word y axis
-			glm::quat rotationY = glm::angleAxis(glm::radians(dx * m_CameraRotationSpeedXY), m_CameraY);
-			// vertical rotation: around the current x axis
-			glm::quat rotationX = glm::angleAxis(glm::radians(dy * m_CameraRotationSpeedXY), glm::vec3(1.0f, 0.0f, 0.0f));
+			// horizental rotation: around the current y axis
+			glm::quat rotationY = glm::angleAxis(glm::radians(-dx * m_CameraRotationSpeedXY), m_Camera->GetYAxis());
+			// vertical rotation: around the world x axis
+			glm::quat rotationX = glm::angleAxis(glm::radians(-dy * m_CameraRotationSpeedXY), glm::vec3(1.0f, 0.0f, 0.0f));
 			glm::quat addedRotation = rotationX * rotationY;
-
-			// update the camera rotation
-			glm::mat3 cameraRotationMatrix = glm::mat3_cast(glm::conjugate(addedRotation));
-			m_CameraX = cameraRotationMatrix * m_CameraX;
-			m_CameraY = cameraRotationMatrix * m_CameraY;
-			m_CameraZ = cameraRotationMatrix * m_CameraZ;
 
 			// update the view projection
 			glm::quat cameraRotation = addedRotation * m_Camera->GetRotation();

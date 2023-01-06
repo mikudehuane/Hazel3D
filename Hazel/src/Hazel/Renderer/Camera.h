@@ -19,9 +19,13 @@ namespace Hazel {
 		void SetRotation(const glm::quat& rotationQuat);
 		inline const glm::quat& GetRotation() { return m_RotationQuat; }
 
-		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
-		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
-		const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
+		inline const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
+		inline const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
+		inline const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
+
+		inline const glm::vec3& GetXAxis() const { return m_CameraX; }
+		inline const glm::vec3& GetYAxis() const { return m_CameraY; }
+		inline const glm::vec3& GetZAxis() const { return m_CameraZ; }
 	private:
 		void RecalculateViewMatrix();
 	private:
@@ -31,6 +35,11 @@ namespace Hazel {
 
 		glm::vec3 m_Position;
 		glm::quat m_RotationQuat;
+
+		glm::vec3 m_CameraX = { 1.0f, 0.0f, 0.0f };
+		glm::vec3 m_CameraY = { 0.0f, 1.0f, 0.0f };
+		glm::vec3 m_CameraZ = { 0.0f, 0.0f, 1.0f };  // point to the camera back
+
 	};
 
 }
