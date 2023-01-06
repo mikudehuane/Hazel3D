@@ -123,17 +123,25 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 
 void Sandbox3D::OnImGuiRender()
 {
-	ImGui::Begin("Settings");
-	ImGui::Checkbox("Perspective", &m_isPerspective);
+
+	ImGui::Begin("Scene Settings");
 	ImGui::DragFloat3("Square Position", glm::value_ptr(m_SquarePos), 0.1f);
+	ImGui::End();
+
+	ImGui::Begin("Camera Status");
+	ImGui::Checkbox("Perspective", &m_isPerspective);
 	// show the current camera state
 	const glm::vec3& cameraPos = m_CameraController.GetCamera().GetPosition();
-	ImGui::Text("Camera Position: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
+	ImGui::Text("Position: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
+	ImGui::Text("AspectRatio: %.1f, Fovy: %.1f, Zoom: %.1f", m_CameraController.GetAspectRatio(), m_CameraController.GetFovy(), m_CameraController.GetZoomLevel());
 	const glm::quat& cameraRotation = m_CameraController.GetCamera().GetRotation();
-	ImGui::Text("Camera Rotation (wxyz): (%.2f, %.2f, %.2f, %.2f)", cameraRotation.w, cameraRotation.x, cameraRotation.y, cameraRotation.z);
-	ImGui::Text("Camera Rotation Norm: %.2f", glm::length(cameraRotation));
+	ImGui::Text("Rotation: %.2f + %.2fi + %.2fj + %.2fk (Norm: %.2f)", cameraRotation.w, cameraRotation.x, cameraRotation.y, cameraRotation.z, glm::length(cameraRotation));
+	const glm::vec3& cameraX = m_CameraController.GetCameraX();
+	ImGui::Text("X: (%.2f, %.2f, %.2f)", cameraX.x, cameraX.y, cameraX.z);
+	const glm::vec3& cameraY = m_CameraController.GetCameraY();
+	ImGui::Text("Y: (%.2f, %.2f, %.2f)", cameraY.x, cameraY.y, cameraY.z);
 	const glm::vec3& cameraZ = m_CameraController.GetCameraZ();
-	ImGui::Text("Camera Z Axis: (%.2f, %.2f, %.2f)", cameraZ.x, cameraZ.y, cameraZ.z);
+	ImGui::Text("Z: (%.2f, %.2f, %.2f)", cameraZ.x, cameraZ.y, cameraZ.z);
 	ImGui::End();
 }
 

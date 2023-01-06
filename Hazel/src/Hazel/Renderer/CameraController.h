@@ -36,6 +36,10 @@ namespace Hazel {
 		inline const glm::vec3& GetCameraY() const { return m_CameraY; }
 		inline const glm::vec3& GetCameraZ() const { return m_CameraZ; }
 
+		inline const float GetZoomLevel() const { return m_ZoomLevel; }
+		inline const float GetFovy() const { return m_Fovy; }
+		inline const float GetAspectRatio() const { return m_AspectRatio; }
+
 		// TODO(islander): add euler angle supports
 	private:
 		glm::mat4 ComputePerspectiveProjectionMatrix();
