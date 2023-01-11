@@ -32,4 +32,9 @@ namespace Hazel {
 		glDrawElements(GL_TRIANGLES, elementCount, GL_UNSIGNED_INT, nullptr);
 	}
 
+	void OpenGLRendererAPI::Draw(int first, uint32_t elementCount)
+	{
+		glDrawArrays(GL_TRIANGLES, first, elementCount);
+	}
+
 }

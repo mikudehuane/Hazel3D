@@ -44,7 +44,15 @@ namespace Hazel {
 		material->GetShader()->SetMat4("u_Transform", modelTransform);
 		
 		vertexArray->Bind();
-		RenderCommand::DrawIndexed(vertexArray->GetIndexBuffer()->GetCount());
+
+		if (vertexArray->GetIndexBuffer())
+		{
+			RenderCommand::DrawIndexed(vertexArray->GetIndexBuffer()->GetCount());
+		}
+		else
+		{
+			RenderCommand::Draw(0, vertexArray->GetVertexCount());
+		}
 	}
 
 }

@@ -14,5 +14,6 @@ namespace Hazel {
 		virtual void Clear() override;
 
 		virtual void DrawIndexed(uint32_t elementCount) override;
+		virtual void Draw(int first, uint32_t elementCount) override;  // draw without index buffer
 	};
 }

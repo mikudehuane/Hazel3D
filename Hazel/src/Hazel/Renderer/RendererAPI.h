@@ -20,6 +20,7 @@ namespace Hazel {
 		virtual void Clear() = 0;
 
 		virtual void DrawIndexed(uint32_t elementCount) = 0;
+		virtual void Draw(int first, uint32_t elementCount) = 0;
 
 		inline static API GetAPI() { return s_API; }
 	private:

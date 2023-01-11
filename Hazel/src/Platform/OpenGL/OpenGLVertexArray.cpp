@@ -77,4 +77,21 @@ namespace Hazel {
 		m_IndexBuffer = indexBuffer;
 	}
 
+	uint32_t OpenGLVertexArray::GetVertexCount() const
+	{
+		if (m_IndexBuffer)
+		{
+			return m_IndexBuffer->GetCount();
+		}
+		else
+		{
+			uint32_t elementCount = 0;
+			for (const auto& vertexBuffer : m_VertexBuffers)
+			{
+				elementCount += vertexBuffer->GetVertexCount();
+			}
+			return elementCount;
+		}
+	}
+
 }

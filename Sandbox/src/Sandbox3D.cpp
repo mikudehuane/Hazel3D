@@ -64,19 +64,13 @@ void Sandbox3D::OnAttach()
 		{ Hazel::ShaderDataType::Float3, "a_Position" },
 		{ Hazel::ShaderDataType::Float2, "a_TexCoord" }
 		});
-	// index buffer
-	std::array<uint32_t, 36> boxIndices;
-	std::iota(std::begin(boxIndices), std::end(boxIndices), 0);
-	Hazel::Ref<Hazel::IndexBuffer> boxIB = Hazel::IndexBuffer::Create(boxIndices.data(), sizeof(boxIndices) / sizeof(uint32_t));
 	// vertices array
 	m_BoxVA = Hazel::VertexArray::Create();
 	m_BoxVA->AddVertexBuffer(boxVB);
-	m_BoxVA->SetIndexBuffer(boxIB);
 
 	// light source
 	m_LightVA = Hazel::VertexArray::Create();
 	m_LightVA->AddVertexBuffer(boxVB);
-	m_LightVA->SetIndexBuffer(boxIB);
 
 	// material
 	m_TexMaterial = Hazel::CreateRef<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Material"));
