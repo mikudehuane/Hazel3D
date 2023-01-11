@@ -31,6 +31,9 @@ private:
 	Hazel::Ref<Hazel::VertexArray> m_LightVA;
 	Hazel::Ref<Hazel::Material> m_LightMaterial;
 	glm::vec3 m_LightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-	glm::vec3 m_LightPos = glm::vec3(1.0f, 0.0f, 0.0f);
+	glm::vec3 m_LightPos = glm::vec3(1.0f, 1.0f, 1.0f);
+	struct {
+		float ambient, diffuse, specular;
+	} m_LightIntensity = { 0.1f, 1.0f, 0.5f };
 };
 
