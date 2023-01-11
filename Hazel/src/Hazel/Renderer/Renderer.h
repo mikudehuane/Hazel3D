@@ -24,6 +24,12 @@ namespace Hazel {
 			const Ref<Material>& material,
 			const glm::mat4& modelTransform = glm::mat4(1.0f)
 		);
+		// submit a light source to draw
+		static void Submit(
+			const Ref<VertexArray>& vertexArray, 
+			const Ref<Light>& light,
+			const glm::mat4& modelTransform = glm::mat4(1.0f)
+		);
 
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 

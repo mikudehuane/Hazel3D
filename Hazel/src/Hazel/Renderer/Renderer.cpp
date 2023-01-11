@@ -11,6 +11,7 @@ namespace Hazel {
 	{
 		Renderer2D::Init();
 
+		s_ShaderLibrary->Load("Hazel/assets/shaders/Material");
 		s_ShaderLibrary->Load("Hazel/assets/shaders/Light");
 	}
 
@@ -51,6 +52,23 @@ namespace Hazel {
 		glm::mat3 modelTransformNormal = glm::transpose(glm::inverse(glm::mat3(modelTransform)));
 		material->GetShader()->SetMat3("u_TransformNormal", modelTransformNormal);
 		
+		vertexArray->Bind();
+
+		if (vertexArray->GetIndexBuffer())
+		{
+			RenderCommand::DrawIndexed(vertexArray->GetIndexBuffer()->GetCount());
+		}
+		else
+		{
+			RenderCommand::Draw(0, vertexArray->GetVertexCount());
+		}
+	}
+
+	void Renderer::Submit(const Ref<VertexArray>& vertexArray, const Ref<Light>& light, const glm::mat4& modelTransform)
+	{
+		auto shader = Hazel::Renderer::GetShaderLib()->Get("Light");
+		shader->Bind();
+		shader->SetMat4("u_Transform", modelTransform);
 		vertexArray->Bind();
 
 		if (vertexArray->GetIndexBuffer())

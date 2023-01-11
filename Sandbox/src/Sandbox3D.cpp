@@ -128,12 +128,13 @@ void Sandbox3D::OnAttach()
 
 	// material
 	m_BoxMaterial = Hazel::CreateRef<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Material"));
-	auto texture = Hazel::Texture2D::Create("Sandbox/assets/textures/LaughContainer.png");
-	m_BoxMaterial->SetTexture(texture);
-	//m_BoxMaterial->SetColor({1.0f, 0.5f, 0.31f});
+	m_BoxMaterial->SetDiffuseMap(Hazel::Texture2D::Create("Sandbox/assets/textures/Container2.png"));
+	m_BoxMaterial->SetSpecularMap(Hazel::Texture2D::Create("Sandbox/assets/textures/Container2Specular.png"));
+	m_BoxMaterial->SetEmissionMap(Hazel::Texture2D::Create("Sandbox/assets/textures/Matrix.jpg"));
 
-	m_LightMaterial = Hazel::CreateRef<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Light"));
-	m_LightMaterial->SetTexture(Hazel::Texture2D::CreateFlatColor({ m_LightColor, 1.0f }));
+	// view phong illumination clearly
+	m_CameraController.SetPosition({ -1.7f, -1.0f, 4.7f });
+	m_CameraController.SetRotation(glm::normalize(glm::quat(1.0f, 0.09f, 0.04f, 0.0f)));
 }
 
 void Sandbox3D::OnUpdate(Hazel::Timestep ts)
@@ -145,9 +146,10 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 
 	m_CameraController.SetPerspective(m_isPerspective);
 	m_Light->SetColor(m_LightColor);
-	m_LightMaterial->SetTexture(Hazel::Texture2D::CreateFlatColor({ m_LightColor, 1.0f }));
 	m_Light->SetPosition(m_LightPos);
 	m_Light->SetIntensity(m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular);
+
+	m_BoxMaterial->SetShininess(m_BoxShininess);
 
 	Hazel::Renderer::BeginScene(m_CameraController.GetCamera(), *m_Light);
 	glm::vec3 cubePositions[] = {
@@ -174,7 +176,7 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 		);
 	}
 	Hazel::Renderer::Submit(
-		m_LightVA, m_LightMaterial,
+		m_LightVA, m_Light,
 		glm::translate(glm::mat4(1.0f), m_LightPos)
 	);
 	Hazel::Renderer::EndScene();
@@ -185,17 +187,20 @@ void Sandbox3D::OnDetach()
 	m_BoxVA.reset();
 	m_BoxMaterial.reset();
 	m_LightVA.reset();
-	m_LightMaterial.reset();
 	m_Light.reset();
 }
 
 void Sandbox3D::OnImGuiRender()
 {
+	ImGui::Begin("Box Settings");
+	ImGui::DragFloat3("Box Position", glm::value_ptr(m_BoxPos), 0.1f);
+	ImGui::SliderFloat("Box Shininess", &m_BoxShininess, 0.0f, 256.0f);
+	ImGui::End();
+
 	ImGui::Begin("Scene Settings");
 	ImGui::SliderFloat3("Global Light Color", glm::value_ptr(m_LightColor), 0.0f, 1.0f);
 	ImGui::DragFloat3("Light Position", glm::value_ptr(m_LightPos), 0.1f);
 	ImGui::SliderFloat3("Light Intensity", reinterpret_cast<float*>(&m_LightIntensity), 0.0f, 1.0f);
-	ImGui::DragFloat3("Boxes Position", glm::value_ptr(m_BoxPos), 0.1f);
 	ImGui::End();
 
 	ImGui::Begin("Camera Status");

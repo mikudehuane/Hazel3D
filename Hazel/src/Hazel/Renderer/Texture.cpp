@@ -31,10 +31,10 @@ namespace Hazel {
 	Ref<Texture2D> Texture2D::CreateFlatColor(const glm::vec4& color)
 	{
 		uint32_t flatColorData = 
-			(uint32_t)(color.r * 255) << 24 | 
-			(uint32_t)(color.g * 255) << 16 | 
-			(uint32_t)(color.b * 255) << 8 | 
-			(uint32_t)(color.a * 255);
+			(uint32_t)(color.a * 255) << 24 | 
+			(uint32_t)(color.b * 255) << 16 | 
+			(uint32_t)(color.g * 255) << 8 | 
+			(uint32_t)(color.r * 255);
 		return Texture2D::Create(1, 1, &flatColorData);
 	}
 

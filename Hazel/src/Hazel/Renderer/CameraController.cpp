@@ -54,6 +54,11 @@ namespace Hazel {
 		m_Camera->SetPosition(m_CameraPosition);
 	}
 
+	void CameraController::SetRotation(const glm::quat& rotation)
+	{
+		m_Camera->SetRotation(rotation);
+	}
+
 	void CameraController::SetPerspective(bool isPerspective)
 	{
 		if (isPerspective != m_IsPerspective)  // reset the projection matrix only if the state changes
@@ -175,7 +180,7 @@ namespace Hazel {
 
 			// update the view projection
 			glm::quat cameraRotation = addedRotation * m_Camera->GetRotation();
-			m_Camera->SetRotation(cameraRotation);
+			SetRotation(cameraRotation);
 			return true;
 		}
 		default: return false;

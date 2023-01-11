@@ -30,6 +30,7 @@ namespace Hazel {
 		inline const Camera& GetCamera() const { return *m_Camera; }
 
 		void SetPosition(const glm::vec3& position);
+		void SetRotation(const glm::quat& rotation);
 		void SetPerspective(bool isPerspective);
 
 		inline const float GetZoomLevel() const { return m_ZoomLevel; }

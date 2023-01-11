@@ -11,12 +11,12 @@ namespace Hazel {
 	public:
 		static Ref<Light> Create(
 			const glm::vec3& color, const glm::vec3& position = glm::vec3(0.0f),
-			float ambientIntensity = 0.1f, float diffuseIntensity = 1.0f, float specularIntensity = 0.5f
+			float ambientIntensity = 0.1f, float diffuseIntensity = 1.0f, float specularIntensity = 1.0f
 		);
 	public:
 		Light(
-			const glm::vec3& color, const glm::vec3& position = glm::vec3(0.0f),
-			float ambientIntensity = 0.1f, float diffuseIntensity = 1.0f, float specularIntensity = 0.5f
+			const glm::vec3& color, const glm::vec3& position,
+			float ambientIntensity, float diffuseIntensity, float specularIntensity
 		): 
 			m_Color(color), m_Position(position),
 			m_AmbientIntensity(ambientIntensity), m_DiffuseIntensity(diffuseIntensity), m_SpecularIntensity(specularIntensity)

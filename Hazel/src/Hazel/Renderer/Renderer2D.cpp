@@ -42,8 +42,6 @@ namespace Hazel {
 		Hazel::Ref<Hazel::IndexBuffer> squareIB;
 		squareIB = Hazel::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 		s_Data->QuadVertexArray->SetIndexBuffer(squareIB);
-		
-		Renderer::GetShaderLib()->Load("Hazel/assets/shaders/Material");
 	}
 
 	void Renderer2D::Shutdown()
