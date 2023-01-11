@@ -22,8 +22,10 @@ private:
 	Hazel::CameraController m_CameraController;
 	bool m_isPerspective = true;
 
-	Hazel::Ref<Hazel::VertexArray> m_SquareVA;
+	Hazel::Ref<Hazel::VertexArray> m_BoxVA;
 	Hazel::Ref<Hazel::Material> m_TexMaterial;
 	glm::vec3 m_SquarePos = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	Hazel::Ref<Hazel::VertexArray> m_LightVA;
 };
 

@@ -86,7 +86,7 @@ namespace Hazel {
 		SetPosSize(material->GetShader(), position, size);
 
 		s_Data->QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+		RenderCommand::DrawIndexed(s_Data->QuadVertexArray->GetIndexBuffer()->GetCount());
 	}
 
 }
