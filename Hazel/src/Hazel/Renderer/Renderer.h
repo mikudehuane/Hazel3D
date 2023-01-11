@@ -28,7 +28,6 @@ namespace Hazel {
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 
 		inline static Ref<ShaderLibrary> GetShaderLib() { return s_ShaderLibrary; }
-		inline static Ref<Texture2D> GetWhiteTexture2D() { return s_WhiteTexture2D; }
 	private:
 		struct SceneData
 		{
@@ -38,7 +37,6 @@ namespace Hazel {
 		static SceneData* m_SceneData;
 
 		static Ref<ShaderLibrary> s_ShaderLibrary;
-		static Ref<Texture2D> s_WhiteTexture2D;
 	};
 	
 }

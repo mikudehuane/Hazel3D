@@ -2,6 +2,8 @@
 
 #include "Hazel/Core/Core.h"
 
+#include <glm/glm.hpp>
+
 namespace Hazel {
 
 	class Texture
@@ -26,6 +28,7 @@ namespace Hazel {
 	public:
 		static Ref<Texture2D> Create(uint32_t width, uint32_t height, void* data = nullptr);
 		static Ref<Texture2D> Create(const std::string& path);
+		static Ref<Texture2D> CreateFlatColor(const glm::vec4& color);
 	};
 
 }
