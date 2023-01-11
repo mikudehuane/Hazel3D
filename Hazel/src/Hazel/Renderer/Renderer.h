@@ -35,6 +35,8 @@ namespace Hazel {
 
 		inline static Ref<ShaderLibrary> GetShaderLib() { return s_ShaderLibrary; }
 	private:
+		static void DrawVertexArray(const Ref<VertexArray>& vertexArray);
+	private:
 		struct SceneData
 		{
 			glm::mat4 ViewProjectionMatrix;

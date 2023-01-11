@@ -127,10 +127,12 @@ void Sandbox3D::OnAttach()
 	);
 
 	// material
-	m_BoxMaterial = Hazel::CreateRef<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Material"));
-	m_BoxMaterial->SetDiffuseMap(Hazel::Texture2D::Create("Sandbox/assets/textures/Container2.png"));
-	m_BoxMaterial->SetSpecularMap(Hazel::Texture2D::Create("Sandbox/assets/textures/Container2Specular.png"));
-	m_BoxMaterial->SetEmissionMap(Hazel::Texture2D::Create("Sandbox/assets/textures/Matrix.jpg"));
+	m_BoxMaterial = Hazel::CreateRef<Hazel::Material>(
+		Hazel::Texture2D::Create("Sandbox/assets/textures/Container2.png"),
+		Hazel::Texture2D::Create("Sandbox/assets/textures/Container2Specular.png"),
+		Hazel::Texture2D::Create("Sandbox/assets/textures/Matrix.jpg"),
+		m_BoxShininess
+	);
 
 	// view phong illumination clearly
 	m_CameraController.SetPosition({ -1.7f, -1.0f, 4.7f });

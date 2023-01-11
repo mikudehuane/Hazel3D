@@ -11,7 +11,12 @@ namespace Hazel {
 	class Material
 	{
 	public:
-		Material(Ref<Shader> shader, float shininess = 32.0f);
+		Material(
+			Ref<Texture2D> diffuseMap = nullptr,
+			Ref<Texture2D> specularMap = nullptr,
+			Ref<Texture2D> emissionMap = nullptr,
+			float shininess = 32.0f
+		);
 		
 		void SetDiffuseMap(Ref<Texture2D> texture);
 		void SetSpecularMap(Ref<Texture2D> texture);
@@ -20,15 +25,12 @@ namespace Hazel {
 		inline float GetShininess() const { return m_Shininess; }
 		inline void SetShininess(float shininess) { m_Shininess = shininess; }
 
-		inline const Ref<Shader>& GetShader() const { return m_Shader; }
-
-		void Bind();
+		void Bind(const Ref<Shader>& shader);
 	private:
 		static const int s_DiffuseSlot = 0;
 		static const int s_SpecularSlot = 1;
 		static const int s_EmissionSlot = 2;
 	private:
-		Ref<Shader> m_Shader;
 		Ref<Texture2D> m_DiffuseMap;
 		Ref<Texture2D> m_SpecularMap;
 		Ref<Texture2D> m_EmissionMap;
