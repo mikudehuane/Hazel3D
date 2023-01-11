@@ -31,11 +31,11 @@ namespace Hazel {
 			shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 			shader->SetFloat3("u_ViewPosition", camera.GetPosition());
 
-			shader->SetFloat3("u_LightColor", light.GetColor());
-			shader->SetFloat3("u_LightPosition", light.GetPosition());
-			shader->SetFloat("u_LightAmbientIntensity", light.GetAmbientIntensity());
-			shader->SetFloat("u_LightDiffuseIntensity", light.GetDiffuseIntensity());
-			shader->SetFloat("u_LightSpecularIntensity", light.GetSpecularIntensity());
+			shader->SetFloat3("u_Light.color", light.GetColor());
+			shader->SetFloat3("u_Light.position", light.GetPosition());
+			shader->SetFloat("u_Light.ambient", light.GetAmbientIntensity());
+			shader->SetFloat("u_Light.diffuse", light.GetDiffuseIntensity());
+			shader->SetFloat("u_Light.specular", light.GetSpecularIntensity());
 		}
 	}
 

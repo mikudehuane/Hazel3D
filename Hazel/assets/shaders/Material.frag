@@ -8,11 +8,15 @@ in vec3 v_FragPosition;
 
 // scene globals
 // light
-uniform vec3 u_LightColor = vec3(1.0, 1.0, 1.0);
-uniform vec3 u_LightPosition;
-uniform float u_LightAmbientIntensity = 0.1;
-uniform float u_LightDiffuseIntensity = 1.0;
-uniform float u_LightSpecularIntensity = 0.5;
+struct Light
+{
+	vec3 position;
+	vec3 color;
+	float ambient;
+	float diffuse;
+	float specular;
+};
+uniform Light u_Light;
 // camera
 uniform vec3 u_ViewPosition;
 
@@ -26,19 +30,19 @@ void main()
 	vec4 objectColor = mix(texture(u_Texture, v_TexCoord), u_Color, u_ColorMixAlpha);
 
 	// ambient
-	vec3 ambient = u_LightAmbientIntensity * u_LightColor;
+	vec3 ambient = u_Light.ambient * u_Light.color;
 
 	// diffuse
 	vec3 normal = normalize(v_Normal);
-	vec3 lightDir = normalize(u_LightPosition - v_FragPosition);
+	vec3 lightDir = normalize(u_Light.position - v_FragPosition);
 	float diffuseIntensity = max(dot(normal, lightDir), 0.0);
-	vec3 diffuse = diffuseIntensity * u_LightDiffuseIntensity * u_LightColor;
+	vec3 diffuse = diffuseIntensity * u_Light.diffuse * u_Light.color;
 
 	// specular
 	vec3 viewDir = normalize(u_ViewPosition - v_FragPosition);
 	vec3 reflectDir = reflect(-lightDir, normal);
 	float specularIntensity = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-	vec3 specular = specularIntensity * u_LightSpecularIntensity * u_LightColor;
+	vec3 specular = specularIntensity * u_Light.specular * u_Light.color;
 
 	color = vec4(objectColor.rgb * (ambient + diffuse + specular), objectColor.a);
 }
