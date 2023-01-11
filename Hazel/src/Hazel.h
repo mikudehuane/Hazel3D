@@ -28,4 +28,6 @@
 #include "Hazel/Renderer/OrthographicCamera.h"
 #include "Hazel/Renderer/OrthographicCameraController.h"
 
+#include "Hazel/Renderer/Light.h"
+
 #include "Hazel/ImGui/ImGuiLayer.h"

@@ -18,7 +18,7 @@ private:
 	Hazel::OrthographicCameraController m_CameraController;
 
 	// TODO(cherno): temp
-	Hazel::Ref<Hazel::Material> m_TexMaterial;
+	Hazel::Ref<Hazel::Material> m_BoxMaterial;
 	Hazel::Ref<Hazel::Material> m_ColorMaterial;
 	Hazel::Ref<Hazel::Material> m_MixedMaterial;
 

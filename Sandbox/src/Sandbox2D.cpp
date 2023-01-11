@@ -12,9 +12,9 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
-	m_TexMaterial = Hazel::CreateRef<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Material"));
+	m_BoxMaterial = Hazel::CreateRef<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Material"));
 	auto texture = Hazel::Texture2D::Create("Sandbox/assets/textures/laugh.png");
-	m_TexMaterial->SetTexture(texture);
+	m_BoxMaterial->SetTexture(texture);
 
 	m_ColorMaterial = Hazel::CreateRef<Hazel::Material>(Hazel::Renderer::GetShaderLib()->Get("Material"));
 
@@ -42,7 +42,7 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 	Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_MixedMaterial);
 	m_ColorMaterial->SetColor(m_SquareColor);
 	Hazel::Renderer2D::DrawQuad({ -1.0f, 0.5f }, { 0.4f, 0.8f }, m_ColorMaterial);
-	Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 2.0f, 2.0f }, m_TexMaterial);
+	Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 2.0f, 2.0f }, m_BoxMaterial);
 	Hazel::Renderer2D::EndScene();
 }
 

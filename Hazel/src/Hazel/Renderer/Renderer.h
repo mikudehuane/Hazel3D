@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Material.h"
+#include "Light.h"
 
 namespace Hazel {
 
@@ -15,7 +16,7 @@ namespace Hazel {
 		static void Init();
 		static void OnWindowResize(uint32_t width, uint32_t height);
 		
-		static void BeginScene(const Camera& camera);
+		static void BeginScene(const Camera& camera, const Light& globalLight);
 		static void EndScene();
 
 		static void Submit(

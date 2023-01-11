@@ -14,6 +14,11 @@ namespace Hazel {
 		m_Texture2D = texture;
 	}
 
+	void Material::SetColor(const glm::vec3& color, float mixAlpha)
+	{
+		SetColor(glm::vec4(color, 1.0f), mixAlpha);
+	}
+
 	void Material::SetColor(const glm::vec4& color, float mixAlpha)
 	{
 		m_Color = color;

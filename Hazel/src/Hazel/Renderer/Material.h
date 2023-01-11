@@ -14,6 +14,7 @@ namespace Hazel {
 		Material(Ref<Shader> shader);
 		void SetTexture(Ref<Texture2D> texture);
 		// add color as mixed, mix with factor mixAlpha
+		void SetColor(const glm::vec3& color, float mixAlpha = 1.0f);
 		void SetColor(const glm::vec4& color, float mixAlpha = 1.0f);
 
 		inline const Ref<Shader>& GetShader() const { return m_Shader; }
