@@ -70,4 +70,34 @@ namespace Hazel {
 		{
 		}
 	};
+
+	class PointLight : public Light
+	{
+	public:
+		// illumination range = 50 By default
+		PointLight(
+			const glm::vec3& color, const glm::vec3& position,
+			float ambientIntensity = 0.1f, float diffuseIntensity = 1.0f, float specularIntensity = 1.0f,
+			float constant = 1.0f, float linear = 0.09f, float quadratic = 0.032f
+		) :
+			Light(color, { position, 1.0f }, ambientIntensity, diffuseIntensity, specularIntensity, Point),
+			m_Constant(constant), m_Linear(linear), m_Quadratic(quadratic)
+		{
+		}
+
+		inline float GetConstant() const { return m_Constant; }
+		inline void SetConstant(float constant) { m_Constant = constant; }
+		inline float GetLinear() const { return m_Linear; }
+		inline void SetLinear(float linear) { m_Linear = linear; }
+		inline float GetQuadratic() const { return m_Quadratic; }
+		inline void SetQuadratic(float quadratic) { m_Quadratic = quadratic; }
+		inline void SetAttenuation(float constant, float linear, float quadratic)
+		{
+			m_Constant = constant;
+			m_Linear = linear;
+			m_Quadratic = quadratic;
+		}
+	private:
+		float m_Constant, m_Linear, m_Quadratic;
+	};
 }

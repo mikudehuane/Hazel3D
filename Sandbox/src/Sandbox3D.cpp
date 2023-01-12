@@ -121,7 +121,7 @@ void Sandbox3D::OnAttach()
 	m_LightVA = Hazel::VertexArray::Create();
 	m_LightVA->AddVertexBuffer(lightVB);
 
-	m_Light = Hazel::CreateRef<Hazel::DirectionalLight>(
+	m_Light = Hazel::CreateRef<Hazel::PointLight>(
 		m_LightColor, m_LightPos,
 		m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular
 	);
@@ -152,10 +152,15 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 	m_Light->SetColor(m_LightColor);
 	m_Light->SetPosition(m_LightPos);
 	m_Light->SetIntensity(m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular);
+	std::dynamic_pointer_cast<Hazel::PointLight>(m_Light)->SetAttenuation(
+		m_LightAttenuation.constant,
+		m_LightAttenuation.linear,
+		m_LightAttenuation.quadratic
+	);
 
 	m_BoxMaterial->SetShininess(m_BoxShininess);
 
-	Hazel::Renderer::BeginScene(m_CameraController.GetCamera(), *m_Light);
+	Hazel::Renderer::BeginScene(m_CameraController.GetCamera(), m_Light);
 	glm::vec3 cubePositions[] = {
 		glm::vec3(0.0f,  0.0f,  0.0f),
 		glm::vec3(2.0f,  5.0f, -15.0f),
@@ -205,6 +210,7 @@ void Sandbox3D::OnImGuiRender()
 	ImGui::End();
 
 	ImGui::Begin("Scene Settings");
+	ImGui::SliderFloat3("Light Attenuation", reinterpret_cast<float*>(&m_LightAttenuation), 0.0f, 1.0f);
 	ImGui::SliderFloat3("Global Light Color", glm::value_ptr(m_LightColor), 0.0f, 1.0f);
 	ImGui::DragFloat3("Light Position/Direction", glm::value_ptr(m_LightPos), 0.1f);
 	ImGui::SliderFloat3("Light Intensity", reinterpret_cast<float*>(&m_LightIntensity), 0.0f, 1.0f);
