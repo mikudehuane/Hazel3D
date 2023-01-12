@@ -120,12 +120,22 @@ void Sandbox3D::OnAttach()
 	// vertices array
 	m_LightVA = Hazel::VertexArray::Create();
 	m_LightVA->AddVertexBuffer(lightVB);
-
-	m_Light = Hazel::CreateRef<Hazel::SpotLight>(
-		m_LightColor, m_CameraController.GetCamera().GetPosition(), -m_CameraController.GetCamera().GetZAxis(),
-		m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular,
-		glm::cos(glm::radians(m_LightCutOff)), glm::cos(glm::radians(m_LightCutOff + 5.0f))
+	
+	m_Light = Hazel::CreateRef<Hazel::DirectionalLight>(
+		m_LightColor, m_LightPos,
+		m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular
 	);
+	//m_Light = Hazel::CreateRef<Hazel::PointLight>(
+	//	m_LightColor, m_LightPos,
+	//	m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular,
+	//	m_LightAttenuation.constant, m_LightAttenuation.linear, m_LightAttenuation.quadratic,
+	//);
+	//m_Light = Hazel::CreateRef<Hazel::SpotLight>(
+	//	m_LightColor, m_CameraController.GetCamera().GetPosition(), -m_CameraController.GetCamera().GetZAxis(),
+	//	m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular,
+	//	m_LightAttenuation.constant, m_LightAttenuation.linear, m_LightAttenuation.quadratic,
+	//	glm::cos(glm::radians(m_LightCutOff)), glm::cos(glm::radians(m_LightCutOff + 5.0f))
+	//);
 
 	// material
 	m_BoxMaterial = Hazel::CreateRef<Hazel::Material>(
@@ -151,18 +161,36 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 	m_CameraController.SetPerspective(m_isPerspective);
 
 	m_Light->SetColor(m_LightColor);
-	m_Light->SetPosition(m_CameraController.GetCamera().GetPosition());
-	m_Light->SetDirection(-m_CameraController.GetCamera().GetZAxis());
 	m_Light->SetIntensity(m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular);
-	m_Light->SetCutOffs(
-		glm::cos(glm::radians(m_LightCutOff)),
-		glm::cos(glm::radians(m_LightCutOff + 5.0f))
-	);
-	m_Light->SetAttenuation(
-		m_LightAttenuation.constant,
-		m_LightAttenuation.linear,
-		m_LightAttenuation.quadratic
-	);
+	if (m_Light->GetType() == Hazel::Light::Directional)
+	{
+		m_Light->SetPosition(m_LightPos);
+	}
+	else if (m_Light->GetType() == Hazel::Light::Point)
+	{
+		auto light = std::dynamic_pointer_cast<Hazel::PointLight>(m_Light);
+		light->SetPosition(m_LightPos);
+		light->SetAttenuation(
+			m_LightAttenuation.constant,
+			m_LightAttenuation.linear,
+			m_LightAttenuation.quadratic
+		);
+	}
+	else if (m_Light->GetType() == Hazel::Light::Spot)
+	{
+		auto light = std::dynamic_pointer_cast<Hazel::SpotLight>(m_Light);
+		light->SetPosition(m_CameraController.GetCamera().GetPosition());
+		light->SetDirection(-m_CameraController.GetCamera().GetZAxis());
+		light->SetAttenuation(
+			m_LightAttenuation.constant,
+			m_LightAttenuation.linear,
+			m_LightAttenuation.quadratic
+		);
+		light->SetCutOffs(
+			glm::cos(glm::radians(m_LightCutOff)),
+			glm::cos(glm::radians(m_LightCutOff + 5.0f))
+		);
+	}
 
 	m_BoxMaterial->SetShininess(m_BoxShininess);
 
