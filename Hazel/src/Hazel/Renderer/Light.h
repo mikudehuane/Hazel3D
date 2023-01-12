@@ -15,17 +15,14 @@ namespace Hazel {
 			Spot = 2
 		};
 	public:
-		static Ref<Light> Create(
-			const glm::vec3& color, const glm::vec3& position = glm::vec3(0.0f),
-			float ambientIntensity = 0.1f, float diffuseIntensity = 1.0f, float specularIntensity = 1.0f,
-			LightType type = Directional
-		);
-	public:
 		Light(
-			const glm::vec3& color, const glm::vec3& position,
+			const glm::vec3& color, const glm::vec4& position,
 			float ambientIntensity, float diffuseIntensity, float specularIntensity,
 			LightType type
-		);
+		) :
+			m_Color(color), m_Type(type), m_Position(position),
+			m_AmbientIntensity(ambientIntensity), m_DiffuseIntensity(diffuseIntensity), m_SpecularIntensity(specularIntensity)
+		{}
 
 		virtual ~Light() = default;
 
@@ -41,7 +38,6 @@ namespace Hazel {
 		inline void SetColor(const glm::vec3& color) { m_Color = color; }
 
 		inline LightType GetType() const { return m_Type; }
-		inline void SetType(LightType type);
 
 		inline float GetAmbientIntensity() const { return m_AmbientIntensity; }
 		inline void SetAmbientIntensity(float ambientIntensity) { m_AmbientIntensity = ambientIntensity; }
@@ -59,8 +55,19 @@ namespace Hazel {
 	private:
 		LightType m_Type;
 		glm::vec3 m_Color;
-		glm::vec4 m_Position;  // w = 0 for parallel 1 for point
 		float m_AmbientIntensity, m_DiffuseIntensity, m_SpecularIntensity;
+		glm::vec4 m_Position;  // w = 0.0f means directional light
 	};
 
+	class DirectionalLight : public Light
+	{
+	public:
+		DirectionalLight(
+			const glm::vec3& color, const glm::vec3& direction,
+			float ambientIntensity = 0.1f, float diffuseIntensity = 1.0f, float specularIntensity = 1.0f
+		): 
+			Light(color, {direction, 0.0f}, ambientIntensity, diffuseIntensity, specularIntensity, Directional)
+		{
+		}
+	};
 }

@@ -121,10 +121,9 @@ void Sandbox3D::OnAttach()
 	m_LightVA = Hazel::VertexArray::Create();
 	m_LightVA->AddVertexBuffer(lightVB);
 
-	m_Light = Hazel::Light::Create(
+	m_Light = Hazel::CreateRef<Hazel::DirectionalLight>(
 		m_LightColor, m_LightPos,
-		m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular,
-		m_LightType
+		m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular
 	);
 
 	// material
@@ -150,7 +149,6 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 
 	m_CameraController.SetPerspective(m_isPerspective);
 
-	m_Light->SetType(m_LightType);
 	m_Light->SetColor(m_LightColor);
 	m_Light->SetPosition(m_LightPos);
 	m_Light->SetIntensity(m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular);
@@ -207,12 +205,6 @@ void Sandbox3D::OnImGuiRender()
 	ImGui::End();
 
 	ImGui::Begin("Scene Settings");
-	// parallel or point or spot
-	ImGui::RadioButton("Directional", reinterpret_cast<int*>(&m_LightType), Hazel::Light::Directional);
-	ImGui::SameLine();
-	ImGui::RadioButton("Point", reinterpret_cast<int*>(&m_LightType), Hazel::Light::Point);
-	ImGui::SameLine();
-	ImGui::RadioButton("Spot", reinterpret_cast<int*>(&m_LightType), Hazel::Light::Spot);
 	ImGui::SliderFloat3("Global Light Color", glm::value_ptr(m_LightColor), 0.0f, 1.0f);
 	ImGui::DragFloat3("Light Position/Direction", glm::value_ptr(m_LightPos), 0.1f);
 	ImGui::SliderFloat3("Light Intensity", reinterpret_cast<float*>(&m_LightIntensity), 0.0f, 1.0f);
