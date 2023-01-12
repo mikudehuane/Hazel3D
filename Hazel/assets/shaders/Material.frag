@@ -10,7 +10,7 @@ in vec3 v_FragPosition;
 // light
 struct Light
 {
-	vec3 position;
+	vec4 position;
 	vec3 color;
 	float ambient;
 	float diffuse;
@@ -39,7 +39,21 @@ void main()
 
 	// diffuse
 	vec3 normal = normalize(v_Normal);
-	vec3 lightDir = normalize(u_Light.position - v_FragPosition);
+	// TODO(islander): separete shaders to avoid branching
+	vec3 lightDir;
+	if (u_Light.position.w == 0.0)
+	{
+		lightDir = normalize(-u_Light.position.xyz);
+	}
+	else if (u_Light.position.w == 1.0)
+	{
+		lightDir = normalize(u_Light.position.xyz - v_FragPosition);
+	}
+	else
+	{
+		// TODO(islander): error
+		lightDir = vec3(0.0);  
+	}
 	float diffuseIntensity = max(dot(normal, lightDir), 0.0);
 	vec3 diffuse = u_Light.diffuse * u_Light.color * diffuseIntensity * diffuseColor.rgb;
 

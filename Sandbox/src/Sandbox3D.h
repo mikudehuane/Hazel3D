@@ -29,9 +29,10 @@ private:
 	glm::vec3 m_BoxPos = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	Hazel::Ref<Hazel::Light> m_Light;
+	Hazel::Light::LightType m_LightType = Hazel::Light::Directional;
 	Hazel::Ref<Hazel::VertexArray> m_LightVA;
 	glm::vec3 m_LightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-	glm::vec3 m_LightPos = glm::vec3(-0.3f, 0.3f, 1.0f);
+	glm::vec3 m_LightPos = glm::vec3(-0.2f, -1.0f, -0.3f);
 	struct {
 		float ambient, diffuse, specular;
 	} m_LightIntensity = { 0.1f, 1.0f, 1.0f };

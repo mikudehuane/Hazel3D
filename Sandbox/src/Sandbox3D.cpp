@@ -123,20 +123,22 @@ void Sandbox3D::OnAttach()
 
 	m_Light = Hazel::Light::Create(
 		m_LightColor, m_LightPos,
-		m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular
+		m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular,
+		m_LightType
 	);
 
 	// material
 	m_BoxMaterial = Hazel::CreateRef<Hazel::Material>(
 		Hazel::Texture2D::Create("Sandbox/assets/textures/Container2.png"),
 		Hazel::Texture2D::Create("Sandbox/assets/textures/Container2Specular.png"),
-		Hazel::Texture2D::Create("Sandbox/assets/textures/Matrix.jpg"),
+		nullptr,
+		//Hazel::Texture2D::Create("Sandbox/assets/textures/Matrix.jpg"),
 		m_BoxShininess
 	);
 
 	// view phong illumination clearly
-	m_CameraController.SetPosition({ -1.7f, -1.0f, 4.7f });
-	m_CameraController.SetRotation(glm::normalize(glm::quat(1.0f, 0.09f, 0.04f, 0.0f)));
+	m_CameraController.SetPosition({ 0.0f, 0.0f, 5.0f });
+	//m_CameraController.SetRotation(glm::normalize(glm::quat(1.0f, 0.09f, 0.04f, 0.0f)));
 }
 
 void Sandbox3D::OnUpdate(Hazel::Timestep ts)
@@ -147,6 +149,8 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 	Hazel::RenderCommand::Clear();
 
 	m_CameraController.SetPerspective(m_isPerspective);
+
+	m_Light->SetType(m_LightType);
 	m_Light->SetColor(m_LightColor);
 	m_Light->SetPosition(m_LightPos);
 	m_Light->SetIntensity(m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular);
@@ -177,10 +181,13 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 			modelMatrix
 		);
 	}
-	Hazel::Renderer::Submit(
-		m_LightVA, m_Light,
-		glm::translate(glm::mat4(1.0f), m_LightPos)
-	);
+	if (m_Light->GetType() == Hazel::Light::Point)
+	{
+		Hazel::Renderer::Submit(
+			m_LightVA, m_Light,
+			glm::translate(glm::mat4(1.0f), m_LightPos)
+		);
+	}
 	Hazel::Renderer::EndScene();
 }
 
@@ -200,8 +207,14 @@ void Sandbox3D::OnImGuiRender()
 	ImGui::End();
 
 	ImGui::Begin("Scene Settings");
+	// parallel or point or spot
+	ImGui::RadioButton("Directional", reinterpret_cast<int*>(&m_LightType), Hazel::Light::Directional);
+	ImGui::SameLine();
+	ImGui::RadioButton("Point", reinterpret_cast<int*>(&m_LightType), Hazel::Light::Point);
+	ImGui::SameLine();
+	ImGui::RadioButton("Spot", reinterpret_cast<int*>(&m_LightType), Hazel::Light::Spot);
 	ImGui::SliderFloat3("Global Light Color", glm::value_ptr(m_LightColor), 0.0f, 1.0f);
-	ImGui::DragFloat3("Light Position", glm::value_ptr(m_LightPos), 0.1f);
+	ImGui::DragFloat3("Light Position/Direction", glm::value_ptr(m_LightPos), 0.1f);
 	ImGui::SliderFloat3("Light Intensity", reinterpret_cast<float*>(&m_LightIntensity), 0.0f, 1.0f);
 	ImGui::End();
 

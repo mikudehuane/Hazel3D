@@ -29,7 +29,7 @@ namespace Hazel {
 			shader->SetFloat3("u_ViewPosition", camera.GetPosition());
 
 			shader->SetFloat3("u_Light.color", light.GetColor());
-			shader->SetFloat3("u_Light.position", light.GetPosition());
+			shader->SetFloat4("u_Light.position", light.GetPosition());
 			shader->SetFloat("u_Light.ambient", light.GetAmbientIntensity());
 			shader->SetFloat("u_Light.diffuse", light.GetDiffuseIntensity());
 			shader->SetFloat("u_Light.specular", light.GetSpecularIntensity());
