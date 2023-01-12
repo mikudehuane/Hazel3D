@@ -36,6 +36,16 @@ namespace Hazel {
 
 	void CameraController::OnUpdate(Timestep ts)
 	{
+		if (Input::IsKeyPressed(HZ_KEY_W))
+		{
+			m_CameraPosition -= m_Camera->GetZAxis() * (m_CameraTranslationSpeedZ * ts);
+			m_Camera->SetPosition(m_CameraPosition);
+		}
+		else if (Input::IsKeyPressed(HZ_KEY_S))
+		{
+			m_CameraPosition += m_Camera->GetZAxis() * (m_CameraTranslationSpeedZ * ts);
+			m_Camera->SetPosition(m_CameraPosition);
+		}
 	}
 
 	void CameraController::OnEvent(Event& e)

@@ -100,4 +100,50 @@ namespace Hazel {
 	private:
 		float m_Constant, m_Linear, m_Quadratic;
 	};
+
+	class SpotLight : public Light
+	{
+	public:
+		SpotLight(
+			const glm::vec3& color, const glm::vec3& position, const glm::vec3& direction,
+			float ambientIntensity = 0.1f, float diffuseIntensity = 1.0f, float specularIntensity = 1.0f,
+			float constant = 1.0f, float linear = 0.09f, float quadratic = 0.032f,
+			float cutOff = glm::cos(glm::radians(12.5f)), float outerCutOff = glm::cos(glm::radians(17.5f))
+		) :
+			Light(color, { position, 1.0f }, ambientIntensity, diffuseIntensity, specularIntensity, Spot),
+			m_Direction(direction), m_Constant(constant), m_Linear(linear), m_Quadratic(quadratic),
+			m_CutOff(cutOff), m_OuterCutOff(outerCutOff)
+		{
+		}
+
+		inline const glm::vec3& GetDirection() const { return m_Direction; }
+		inline void SetDirection(const glm::vec3& direction) { m_Direction = direction; }
+
+		inline float GetConstant() const { return m_Constant; }
+		inline void SetConstant(float constant) { m_Constant = constant; }
+		inline float GetLinear() const { return m_Linear; }
+		inline void SetLinear(float linear) { m_Linear = linear; }
+		inline float GetQuadratic() const { return m_Quadratic; }
+		inline void SetQuadratic(float quadratic) { m_Quadratic = quadratic; }
+		inline void SetAttenuation(float constant, float linear, float quadratic)
+		{
+			m_Constant = constant;
+			m_Linear = linear;
+			m_Quadratic = quadratic;
+		}
+
+		inline float GetCutOff() const { return m_CutOff; }
+		inline void SetCutOff(float cutOff) { m_CutOff = cutOff; }
+		inline float GetOuterCutOff() const { return m_OuterCutOff; }
+		inline void SetOuterCutOff(float outerCutOff) { m_OuterCutOff = outerCutOff; }
+		inline void SetCutOffs(float cutOff, float outerCutOff)
+		{
+			m_CutOff = cutOff;
+			m_OuterCutOff = outerCutOff;
+		}
+	private:
+		float m_CutOff, m_OuterCutOff;
+		float m_Constant, m_Linear, m_Quadratic;
+		glm::vec3 m_Direction;
+	};
 }

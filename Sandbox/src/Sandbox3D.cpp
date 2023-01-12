@@ -121,9 +121,10 @@ void Sandbox3D::OnAttach()
 	m_LightVA = Hazel::VertexArray::Create();
 	m_LightVA->AddVertexBuffer(lightVB);
 
-	m_Light = Hazel::CreateRef<Hazel::PointLight>(
-		m_LightColor, m_LightPos,
-		m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular
+	m_Light = Hazel::CreateRef<Hazel::SpotLight>(
+		m_LightColor, m_CameraController.GetCamera().GetPosition(), -m_CameraController.GetCamera().GetZAxis(),
+		m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular,
+		glm::cos(glm::radians(m_LightCutOff)), glm::cos(glm::radians(m_LightCutOff + 5.0f))
 	);
 
 	// material
@@ -144,15 +145,20 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 {
 	m_CameraController.OnUpdate(ts);
 
-	Hazel::RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1.0f });
+	Hazel::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	Hazel::RenderCommand::Clear();
 
 	m_CameraController.SetPerspective(m_isPerspective);
 
 	m_Light->SetColor(m_LightColor);
-	m_Light->SetPosition(m_LightPos);
+	m_Light->SetPosition(m_CameraController.GetCamera().GetPosition());
+	m_Light->SetDirection(-m_CameraController.GetCamera().GetZAxis());
 	m_Light->SetIntensity(m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular);
-	std::dynamic_pointer_cast<Hazel::PointLight>(m_Light)->SetAttenuation(
+	m_Light->SetCutOffs(
+		glm::cos(glm::radians(m_LightCutOff)),
+		glm::cos(glm::radians(m_LightCutOff + 5.0f))
+	);
+	m_Light->SetAttenuation(
 		m_LightAttenuation.constant,
 		m_LightAttenuation.linear,
 		m_LightAttenuation.quadratic
@@ -211,6 +217,7 @@ void Sandbox3D::OnImGuiRender()
 
 	ImGui::Begin("Scene Settings");
 	ImGui::SliderFloat3("Light Attenuation", reinterpret_cast<float*>(&m_LightAttenuation), 0.0f, 1.0f);
+	ImGui::SliderFloat("Light Cutoff", &m_LightCutOff, 0.0f, 90.0f);
 	ImGui::SliderFloat3("Global Light Color", glm::value_ptr(m_LightColor), 0.0f, 1.0f);
 	ImGui::DragFloat3("Light Position/Direction", glm::value_ptr(m_LightPos), 0.1f);
 	ImGui::SliderFloat3("Light Intensity", reinterpret_cast<float*>(&m_LightIntensity), 0.0f, 1.0f);

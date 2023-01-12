@@ -28,8 +28,9 @@ private:
 	float m_BoxShininess = 32.0f;
 	glm::vec3 m_BoxPos = glm::vec3(0.0f, 0.0f, 0.0f);
 
-	Hazel::Ref<Hazel::Light> m_Light;
+	Hazel::Ref<Hazel::SpotLight> m_Light;
 	Hazel::Ref<Hazel::VertexArray> m_LightVA;
+	float m_LightCutOff = 12.5f;
 	glm::vec3 m_LightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 m_LightPos = glm::vec3(-0.2f, -1.0f, -0.3f);
 	struct {
