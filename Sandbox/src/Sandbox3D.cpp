@@ -121,9 +121,9 @@ void Sandbox3D::OnAttach()
 	m_LightVA = Hazel::VertexArray::Create();
 	m_LightVA->AddVertexBuffer(lightVB);
 	
-	m_Light = Hazel::CreateRef<Hazel::DirectionalLight>(
-		m_LightColor, m_LightPos,
-		m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular
+	m_DirectionalLight = Hazel::CreateRef<Hazel::DirectionalLight>(
+		m_DirectionalLightProp.color, m_DirectionalLightProp.direction,
+		m_DirectionalLightProp.ambient, m_DirectionalLightProp.diffuse, m_DirectionalLightProp.specular
 	);
 	//m_Light = Hazel::CreateRef<Hazel::PointLight>(
 	//	m_LightColor, m_LightPos,
@@ -160,11 +160,21 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 
 	m_CameraController.SetPerspective(m_isPerspective);
 
+	m_DirectionalLight->SetColor(m_DirectionalLightProp.color);
+	m_DirectionalLight->SetDirection(m_DirectionalLightProp.direction);
+	m_DirectionalLight->SetIntensity(
+		m_DirectionalLightProp.ambient,
+		m_DirectionalLightProp.diffuse,
+		m_DirectionalLightProp.specular
+	);
+
+	/*
 	m_Light->SetColor(m_LightColor);
 	m_Light->SetIntensity(m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular);
 	if (m_Light->GetType() == Hazel::Light::Directional)
 	{
-		m_Light->SetPosition(m_LightPos);
+		auto light = std::dynamic_pointer_cast<Hazel::DirectionalLight>(m_Light);
+		light->SetDirection(m_LightPos);
 	}
 	else if (m_Light->GetType() == Hazel::Light::Point)
 	{
@@ -191,10 +201,14 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 			glm::cos(glm::radians(m_LightCutOff + 5.0f))
 		);
 	}
+	*/
 
 	m_BoxMaterial->SetShininess(m_BoxShininess);
 
-	Hazel::Renderer::BeginScene(m_CameraController.GetCamera(), m_Light);
+	Hazel::Renderer::BeginScene(
+		m_CameraController.GetCamera(), 
+		m_DirectionalLight
+	);
 	glm::vec3 cubePositions[] = {
 		glm::vec3(0.0f,  0.0f,  0.0f),
 		glm::vec3(2.0f,  5.0f, -15.0f),
@@ -218,13 +232,10 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 			modelMatrix
 		);
 	}
-	if (m_Light->GetType() == Hazel::Light::Point)
-	{
-		Hazel::Renderer::Submit(
-			m_LightVA, m_Light,
-			glm::translate(glm::mat4(1.0f), m_LightPos)
-		);
-	}
+	//Hazel::Renderer::Submit(
+	//	m_LightVA, m_Light,
+	//	glm::translate(glm::mat4(1.0f), m_LightPos)
+	//);
 	Hazel::Renderer::EndScene();
 }
 
@@ -244,6 +255,11 @@ void Sandbox3D::OnImGuiRender()
 	ImGui::End();
 
 	ImGui::Begin("Scene Settings");
+	ImGui::Text("Directional Light");
+	ImGui::DragFloat3("Direction", glm::value_ptr(m_DirectionalLightProp.direction), 0.1f);
+	ImGui::SliderFloat3("Color", glm::value_ptr(m_DirectionalLightProp.color), 0.0f, 1.0f);
+	ImGui::SliderFloat3("Intensity (a/d/s)", &m_DirectionalLightProp.ambient, 0.0f, 1.0f);
+
 	ImGui::SliderFloat3("Light Attenuation", reinterpret_cast<float*>(&m_LightAttenuation), 0.0f, 1.0f);
 	ImGui::SliderFloat("Light Cutoff", &m_LightCutOff, 0.0f, 90.0f);
 	ImGui::SliderFloat3("Global Light Color", glm::value_ptr(m_LightColor), 0.0f, 1.0f);

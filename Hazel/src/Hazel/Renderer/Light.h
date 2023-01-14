@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "Hazel/Core/Core.h"
+#include "Hazel/Renderer/Shader.h"
 
 namespace Hazel {
 	
@@ -16,23 +17,17 @@ namespace Hazel {
 		};
 	public:
 		Light(
-			const glm::vec3& color, const glm::vec4& position,
+			const glm::vec3& color,
 			float ambientIntensity, float diffuseIntensity, float specularIntensity,
 			LightType type
 		) :
-			m_Color(color), m_Type(type), m_Position(position),
+			m_Color(color), m_Type(type),
 			m_AmbientIntensity(ambientIntensity), m_DiffuseIntensity(diffuseIntensity), m_SpecularIntensity(specularIntensity)
 		{}
 
 		virtual ~Light() = default;
 
 		//virtual void Bind(const Ref<Shader>& shader, uint32_t lightIndex) = 0;
-
-		inline const glm::vec4& GetPosition() const { return m_Position; }
-		inline void SetPosition(const glm::vec3& position) 
-		{ 
-			m_Position = glm::vec4(position, m_Position.w); 
-		}
 
 		inline const glm::vec3& GetColor() const { return m_Color; }
 		inline void SetColor(const glm::vec3& color) { m_Color = color; }
@@ -56,7 +51,6 @@ namespace Hazel {
 		LightType m_Type;
 		glm::vec3 m_Color;
 		float m_AmbientIntensity, m_DiffuseIntensity, m_SpecularIntensity;
-		glm::vec4 m_Position;  // w = 0.0f means directional light
 	};
 
 	class DirectionalLight : public Light
@@ -66,9 +60,17 @@ namespace Hazel {
 			const glm::vec3& color, const glm::vec3& direction,
 			float ambientIntensity = 0.1f, float diffuseIntensity = 1.0f, float specularIntensity = 1.0f
 		): 
-			Light(color, {direction, 0.0f}, ambientIntensity, diffuseIntensity, specularIntensity, Directional)
+			Light(color, ambientIntensity, diffuseIntensity, specularIntensity, Directional),
+			m_Direction(direction)
 		{
 		}
+
+		inline const glm::vec3& GetDirection() const { return m_Direction; }
+		inline void SetDirection(const glm::vec3& direction) { m_Direction = direction; }
+		
+		void Bind(const Ref<Shader>& shader);
+	private:
+		glm::vec3 m_Direction;
 	};
 
 	class PointLight : public Light
@@ -80,9 +82,16 @@ namespace Hazel {
 			float ambientIntensity = 0.1f, float diffuseIntensity = 1.0f, float specularIntensity = 1.0f,
 			float constant = 1.0f, float linear = 0.09f, float quadratic = 0.032f
 		) :
-			Light(color, { position, 1.0f }, ambientIntensity, diffuseIntensity, specularIntensity, Point),
+			Light(color, ambientIntensity, diffuseIntensity, specularIntensity, Point),
+			m_Position(position),
 			m_Constant(constant), m_Linear(linear), m_Quadratic(quadratic)
 		{
+		}
+
+		inline const glm::vec3& GetPosition() const { return m_Position; }
+		inline void SetPosition(const glm::vec3& position)
+		{
+			m_Position = position;
 		}
 
 		inline float GetConstant() const { return m_Constant; }
@@ -99,6 +108,7 @@ namespace Hazel {
 		}
 	private:
 		float m_Constant, m_Linear, m_Quadratic;
+		glm::vec3 m_Position;
 	};
 
 	class SpotLight : public Light
@@ -110,7 +120,8 @@ namespace Hazel {
 			float constant = 1.0f, float linear = 0.09f, float quadratic = 0.032f,
 			float cutOff = glm::cos(glm::radians(12.5f)), float outerCutOff = glm::cos(glm::radians(17.5f))
 		) :
-			Light(color, { position, 1.0f }, ambientIntensity, diffuseIntensity, specularIntensity, Spot),
+			Light(color, ambientIntensity, diffuseIntensity, specularIntensity, Spot),
+			m_Position(position),
 			m_Direction(direction), m_Constant(constant), m_Linear(linear), m_Quadratic(quadratic),
 			m_CutOff(cutOff), m_OuterCutOff(outerCutOff)
 		{
@@ -118,6 +129,12 @@ namespace Hazel {
 
 		inline const glm::vec3& GetDirection() const { return m_Direction; }
 		inline void SetDirection(const glm::vec3& direction) { m_Direction = direction; }
+
+		inline const glm::vec3& GetPosition() const { return m_Position; }
+		inline void SetPosition(const glm::vec3& position)
+		{
+			m_Position = position;
+		}
 
 		inline float GetConstant() const { return m_Constant; }
 		inline void SetConstant(float constant) { m_Constant = constant; }
@@ -145,5 +162,6 @@ namespace Hazel {
 		float m_CutOff, m_OuterCutOff;
 		float m_Constant, m_Linear, m_Quadratic;
 		glm::vec3 m_Direction;
+		glm::vec3 m_Position;
 	};
 }

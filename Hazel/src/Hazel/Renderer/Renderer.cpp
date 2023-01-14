@@ -21,51 +21,60 @@ namespace Hazel {
 	}
 
 	// TODO(islander): decouple different lights and use separate shaders
-	void Renderer::BeginScene(const Camera& camera, const Ref<Light>& light)
+	void Renderer::BeginScene(
+		const Camera& camera,
+		// lighting
+		const Ref<DirectionalLight>& directionalLight)
 	{
 		for (auto& [shaderName, shader] : Renderer::GetShaderLib()->GetShaders())
 		{
 			shader->Bind();
+			// camera
 			shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 			shader->SetFloat3("u_ViewPosition", camera.GetPosition());
 
-			shader->SetFloat3("u_Light.color", light->GetColor());
-			shader->SetFloat4("u_Light.position", light->GetPosition());
-			shader->SetFloat("u_Light.ambient", light->GetAmbientIntensity());
-			shader->SetFloat("u_Light.diffuse", light->GetDiffuseIntensity());
-			shader->SetFloat("u_Light.specular", light->GetSpecularIntensity());
-			// TODO(islander): strange op, decouple attenuation from directional light!
-			if (light->GetType() == Light::Directional)
+			// directional light
+			if (directionalLight)
 			{
-				// placeholder values (designed to make the computation correct)
-				shader->SetFloat("u_Light.constant", 1.0f);
-				shader->SetFloat("u_Light.linear", 0.0f);
-				shader->SetFloat("u_Light.quadratic", 0.0f);
-				shader->SetFloat3("u_Light.direction", { 1.0f, 0.0f, 0.0f });
-				shader->SetFloat("u_Light.cutOff", -1.0f);
-				shader->SetFloat("u_Light.outerCutOff", -1.0f);
+				directionalLight->Bind(shader);
 			}
-			else if (light->GetType() == Light::Point)
-			{
-				Ref<PointLight> pLight = std::dynamic_pointer_cast<PointLight>(light);
-				shader->SetFloat("u_Light.constant", pLight->GetConstant());
-				shader->SetFloat("u_Light.linear", pLight->GetLinear());
-				shader->SetFloat("u_Light.quadratic", pLight->GetQuadratic());
-				// placeholder values (designed to make the computation correct)
-				shader->SetFloat3("u_Light.direction", { 1.0f, 0.0f, 0.0f });
-				shader->SetFloat("u_Light.cutOff", -1.0f);
-				shader->SetFloat("u_Light.outerCutOff", -1.0f);
-			}
-			else if (light->GetType() == Light::Spot)
-			{
-				Ref<SpotLight> sLight = std::dynamic_pointer_cast<SpotLight>(light);
-				shader->SetFloat("u_Light.constant", sLight->GetConstant());
-				shader->SetFloat("u_Light.linear", sLight->GetLinear());
-				shader->SetFloat("u_Light.quadratic", sLight->GetQuadratic());
-				shader->SetFloat3("u_Light.direction", sLight->GetDirection());
-				shader->SetFloat("u_Light.cutOff", sLight->GetCutOff());
-				shader->SetFloat("u_Light.outerCutOff", sLight->GetOuterCutOff());
-			}
+			//shader->SetFloat3("u_Light.color", light->GetColor());
+			//shader->SetFloat4("u_Light.position", light->GetPosition());
+			//shader->SetFloat("u_Light.ambient", light->GetAmbientIntensity());
+			//shader->SetFloat("u_Light.diffuse", light->GetDiffuseIntensity());
+			//shader->SetFloat("u_Light.specular", light->GetSpecularIntensity());
+			//// TODO(islander): strange op, decouple attenuation from directional light!
+			//if (light->GetType() == Light::Directional)
+			//{
+			//	// placeholder values (designed to make the computation correct)
+			//	shader->SetFloat("u_Light.constant", 1.0f);
+			//	shader->SetFloat("u_Light.linear", 0.0f);
+			//	shader->SetFloat("u_Light.quadratic", 0.0f);
+			//	shader->SetFloat3("u_Light.direction", { 1.0f, 0.0f, 0.0f });
+			//	shader->SetFloat("u_Light.cutOff", -1.0f);
+			//	shader->SetFloat("u_Light.outerCutOff", -1.0f);
+			//}
+			//else if (light->GetType() == Light::Point)
+			//{
+			//	Ref<PointLight> pLight = std::dynamic_pointer_cast<PointLight>(light);
+			//	shader->SetFloat("u_Light.constant", pLight->GetConstant());
+			//	shader->SetFloat("u_Light.linear", pLight->GetLinear());
+			//	shader->SetFloat("u_Light.quadratic", pLight->GetQuadratic());
+			//	// placeholder values (designed to make the computation correct)
+			//	shader->SetFloat3("u_Light.direction", { 1.0f, 0.0f, 0.0f });
+			//	shader->SetFloat("u_Light.cutOff", -1.0f);
+			//	shader->SetFloat("u_Light.outerCutOff", -1.0f);
+			//}
+			//else if (light->GetType() == Light::Spot)
+			//{
+			//	Ref<SpotLight> sLight = std::dynamic_pointer_cast<SpotLight>(light);
+			//	shader->SetFloat("u_Light.constant", sLight->GetConstant());
+			//	shader->SetFloat("u_Light.linear", sLight->GetLinear());
+			//	shader->SetFloat("u_Light.quadratic", sLight->GetQuadratic());
+			//	shader->SetFloat3("u_Light.direction", sLight->GetDirection());
+			//	shader->SetFloat("u_Light.cutOff", sLight->GetCutOff());
+			//	shader->SetFloat("u_Light.outerCutOff", sLight->GetOuterCutOff());
+			//}
 		}
 	}
 

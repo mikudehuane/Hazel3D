@@ -16,7 +16,11 @@ namespace Hazel {
 		static void Init();
 		static void OnWindowResize(uint32_t width, uint32_t height);
 		
-		static void BeginScene(const Camera& camera, const Ref<Light>& light);
+		static void BeginScene(
+			const Camera& camera,
+			// lighting
+			const Ref<DirectionalLight>& directionalLight = nullptr
+		);
 		static void EndScene();
 
 		static void Submit(
