@@ -2,15 +2,9 @@
 
 layout(location = 0) out vec4 color;
 
-struct Light
-{
-	vec3 color;
-};
-
-uniform Light u_Light;
+uniform vec3 u_Color;
 
 void main()
 {
-	color = vec4(u_Light.color, 1.0);
-	color = vec4(1.0);
+	color = vec4(u_Color, 1.0);
 }

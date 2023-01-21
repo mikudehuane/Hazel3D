@@ -24,7 +24,9 @@ namespace Hazel {
 	void Renderer::BeginScene(
 		const Camera& camera,
 		// lighting
-		const Ref<DirectionalLight>& directionalLight)
+		const Ref<DirectionalLight>& directionalLight,
+		const std::vector<Ref<PointLight>>& pointLights
+	)
 	{
 		for (auto& [shaderName, shader] : Renderer::GetShaderLib()->GetShaders())
 		{
@@ -38,33 +40,17 @@ namespace Hazel {
 			{
 				directionalLight->Bind(shader);
 			}
+			shader->SetInt("u_PointLightCount", pointLights.size());
+			for (int i = 0; i < pointLights.size(); ++i)
+			{
+				const auto& pointLight = pointLights[i];
+				pointLight->Bind(shader, i);
+			}
 			//shader->SetFloat3("u_Light.color", light->GetColor());
 			//shader->SetFloat4("u_Light.position", light->GetPosition());
 			//shader->SetFloat("u_Light.ambient", light->GetAmbientIntensity());
 			//shader->SetFloat("u_Light.diffuse", light->GetDiffuseIntensity());
 			//shader->SetFloat("u_Light.specular", light->GetSpecularIntensity());
-			//// TODO(islander): strange op, decouple attenuation from directional light!
-			//if (light->GetType() == Light::Directional)
-			//{
-			//	// placeholder values (designed to make the computation correct)
-			//	shader->SetFloat("u_Light.constant", 1.0f);
-			//	shader->SetFloat("u_Light.linear", 0.0f);
-			//	shader->SetFloat("u_Light.quadratic", 0.0f);
-			//	shader->SetFloat3("u_Light.direction", { 1.0f, 0.0f, 0.0f });
-			//	shader->SetFloat("u_Light.cutOff", -1.0f);
-			//	shader->SetFloat("u_Light.outerCutOff", -1.0f);
-			//}
-			//else if (light->GetType() == Light::Point)
-			//{
-			//	Ref<PointLight> pLight = std::dynamic_pointer_cast<PointLight>(light);
-			//	shader->SetFloat("u_Light.constant", pLight->GetConstant());
-			//	shader->SetFloat("u_Light.linear", pLight->GetLinear());
-			//	shader->SetFloat("u_Light.quadratic", pLight->GetQuadratic());
-			//	// placeholder values (designed to make the computation correct)
-			//	shader->SetFloat3("u_Light.direction", { 1.0f, 0.0f, 0.0f });
-			//	shader->SetFloat("u_Light.cutOff", -1.0f);
-			//	shader->SetFloat("u_Light.outerCutOff", -1.0f);
-			//}
 			//else if (light->GetType() == Light::Spot)
 			//{
 			//	Ref<SpotLight> sLight = std::dynamic_pointer_cast<SpotLight>(light);
@@ -103,7 +89,7 @@ namespace Hazel {
 		auto shader = Hazel::Renderer::GetShaderLib()->Get("Light");
 		shader->Bind();
 		shader->SetMat4("u_Transform", modelTransform);
-		
+		shader->SetFloat3("u_Color", light->GetColor());
 		DrawVertexArray(vertexArray);
 	}
 

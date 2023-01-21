@@ -46,7 +46,7 @@ namespace Hazel {
 			m_DiffuseIntensity = diffuseIntensity;
 			m_SpecularIntensity = specularIntensity;
 		}
-
+		
 	private:
 		LightType m_Type;
 		glm::vec3 m_Color;
@@ -106,6 +106,8 @@ namespace Hazel {
 			m_Linear = linear;
 			m_Quadratic = quadratic;
 		}
+
+		void Bind(const Ref<Shader>& shader, int index);
 	private:
 		float m_Constant, m_Linear, m_Quadratic;
 		glm::vec3 m_Position;

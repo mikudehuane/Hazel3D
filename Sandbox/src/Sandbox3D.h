@@ -37,18 +37,22 @@ private:
 		float specular = 1.0f;
 	} m_DirectionalLightProp;
 
-	Hazel::Ref<Hazel::Light> m_Light;
-	Hazel::Ref<Hazel::VertexArray> m_LightVA;
-	float m_LightCutOff = 12.5f;
-	glm::vec3 m_LightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-	glm::vec3 m_LightPos = glm::vec3(-0.2f, -1.0f, -0.3f);
-	struct {
+	std::vector<Hazel::Ref<Hazel::PointLight>> m_PointLights;
+	struct PointLightProps
+	{
+		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+		glm::vec3 position = glm::vec3(-0.2f, -1.0f, -0.3f);
+		float ambient = 0.1f;
+		float diffuse = 1.0f;
+		float specular = 1.0f;
 		float constant = 1.0f;
 		float linear = 0.09f;
 		float quadratic = 0.032f;
-	} m_LightAttenuation;
-	struct {
-		float ambient, diffuse, specular;
-	} m_LightIntensity = { 0.1f, 1.0f, 1.0f };
+	};
+	std::vector<PointLightProps> m_PointLightProps;
+	Hazel::Ref<Hazel::VertexArray> m_PointLightVA;
+	int m_PointLightActivated = 0;
+
+	float m_LightCutOff = 12.5f;
 };
 
