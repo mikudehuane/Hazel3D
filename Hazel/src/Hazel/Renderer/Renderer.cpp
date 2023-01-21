@@ -25,7 +25,8 @@ namespace Hazel {
 		const Camera& camera,
 		// lighting
 		const Ref<DirectionalLight>& directionalLight,
-		const std::vector<Ref<PointLight>>& pointLights
+		const std::vector<Ref<PointLight>>& pointLights,
+		const Ref<SpotLight>& spotLight
 	)
 	{
 		for (auto& [shaderName, shader] : Renderer::GetShaderLib()->GetShaders())
@@ -46,21 +47,11 @@ namespace Hazel {
 				const auto& pointLight = pointLights[i];
 				pointLight->Bind(shader, i);
 			}
-			//shader->SetFloat3("u_Light.color", light->GetColor());
-			//shader->SetFloat4("u_Light.position", light->GetPosition());
-			//shader->SetFloat("u_Light.ambient", light->GetAmbientIntensity());
-			//shader->SetFloat("u_Light.diffuse", light->GetDiffuseIntensity());
-			//shader->SetFloat("u_Light.specular", light->GetSpecularIntensity());
-			//else if (light->GetType() == Light::Spot)
-			//{
-			//	Ref<SpotLight> sLight = std::dynamic_pointer_cast<SpotLight>(light);
-			//	shader->SetFloat("u_Light.constant", sLight->GetConstant());
-			//	shader->SetFloat("u_Light.linear", sLight->GetLinear());
-			//	shader->SetFloat("u_Light.quadratic", sLight->GetQuadratic());
-			//	shader->SetFloat3("u_Light.direction", sLight->GetDirection());
-			//	shader->SetFloat("u_Light.cutOff", sLight->GetCutOff());
-			//	shader->SetFloat("u_Light.outerCutOff", sLight->GetOuterCutOff());
-			//}
+			if (spotLight)
+			{
+				shader->SetInt("u_SpotLightCount", 1);  // TODO(islander): as an array
+				spotLight->Bind(shader);
+			}
 		}
 	}
 

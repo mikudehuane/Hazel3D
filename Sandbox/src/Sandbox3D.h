@@ -53,6 +53,17 @@ private:
 	Hazel::Ref<Hazel::VertexArray> m_PointLightVA;
 	int m_PointLightActivated = 0;
 
-	float m_LightCutOff = 12.5f;
+	Hazel::Ref<Hazel::SpotLight> m_SpotLight;
+	struct {
+		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+		float ambient = 0.1f;
+		float diffuse = 1.0f;
+		float specular = 1.0f;
+		float constant = 1.0f;
+		float linear = 0.09f;
+		float quadratic = 0.032f;
+		float cutOff = 12.5f;
+		float epsilon = 5.0f;
+	} m_SpotLightProp;
 };
 

@@ -69,7 +69,15 @@ void Sandbox3D::OnAttach()
 	m_BoxVA = Hazel::VertexArray::Create();
 	m_BoxVA->AddVertexBuffer(boxVB);
 
-	// light source
+	// *********************** light source
+
+	// directional light
+	m_DirectionalLight = Hazel::CreateRef<Hazel::DirectionalLight>(
+		m_DirectionalLightProp.color, m_DirectionalLightProp.direction,
+		m_DirectionalLightProp.ambient, m_DirectionalLightProp.diffuse, m_DirectionalLightProp.specular
+	);
+
+	// point light
 	float lightVertices[] = {
 		-0.1f, -0.1f, -0.1f,
 		 0.1f, -0.1f, -0.1f,
@@ -120,11 +128,6 @@ void Sandbox3D::OnAttach()
 	// vertices array
 	m_PointLightVA = Hazel::VertexArray::Create();
 	m_PointLightVA->AddVertexBuffer(pointLightVB);
-	
-	m_DirectionalLight = Hazel::CreateRef<Hazel::DirectionalLight>(
-		m_DirectionalLightProp.color, m_DirectionalLightProp.direction,
-		m_DirectionalLightProp.ambient, m_DirectionalLightProp.diffuse, m_DirectionalLightProp.specular
-	);
 	glm::vec3 pointLightPositions[] = {
 		glm::vec3(0.7f,  0.2f,  2.0f),
 		glm::vec3(2.3f, -3.3f, -4.0f),
@@ -144,17 +147,14 @@ void Sandbox3D::OnAttach()
 			prop.constant, prop.linear, prop.quadratic
 		));
 	}
-	//m_Light = Hazel::CreateRef<Hazel::PointLight>(
-	//	m_LightColor, m_LightPos,
-	//	m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular,
-	//	m_LightAttenuation.constant, m_LightAttenuation.linear, m_LightAttenuation.quadratic,
-	//);
-	//m_Light = Hazel::CreateRef<Hazel::SpotLight>(
-	//	m_LightColor, m_CameraController.GetCamera().GetPosition(), -m_CameraController.GetCamera().GetZAxis(),
-	//	m_LightIntensity.ambient, m_LightIntensity.diffuse, m_LightIntensity.specular,
-	//	m_LightAttenuation.constant, m_LightAttenuation.linear, m_LightAttenuation.quadratic,
-	//	glm::cos(glm::radians(m_LightCutOff)), glm::cos(glm::radians(m_LightCutOff + 5.0f))
-	//);
+
+	// spot light
+	m_SpotLight = Hazel::CreateRef<Hazel::SpotLight>(
+		m_SpotLightProp.color, m_CameraController.GetCamera().GetPosition(), -m_CameraController.GetCamera().GetZAxis(),
+		m_SpotLightProp.ambient, m_SpotLightProp.diffuse, m_SpotLightProp.specular,
+		m_SpotLightProp.constant, m_SpotLightProp.linear, m_SpotLightProp.quadratic,
+		glm::cos(glm::radians(m_SpotLightProp.cutOff)), glm::cos(glm::radians(m_SpotLightProp.cutOff + m_SpotLightProp.epsilon))
+	);
 
 	// material
 	m_BoxMaterial = Hazel::CreateRef<Hazel::Material>(
@@ -203,11 +203,29 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 		);
 	}
 
+	m_SpotLight->SetColor(m_SpotLightProp.color);
+	m_SpotLight->SetPosition(m_CameraController.GetCamera().GetPosition());
+	m_SpotLight->SetDirection(-m_CameraController.GetCamera().GetZAxis());
+	m_SpotLight->SetIntensity(
+		m_SpotLightProp.ambient,
+		m_SpotLightProp.diffuse,
+		m_SpotLightProp.specular
+	);
+	m_SpotLight->SetAttenuation(
+		m_SpotLightProp.constant,
+		m_SpotLightProp.linear,
+		m_SpotLightProp.quadratic
+	);
+	m_SpotLight->SetCutOffs(
+		glm::cos(glm::radians(m_SpotLightProp.cutOff)),
+		glm::cos(glm::radians(m_SpotLightProp.cutOff + m_SpotLightProp.epsilon))
+	);
+
 	m_BoxMaterial->SetShininess(m_BoxShininess);
 
 	Hazel::Renderer::BeginScene(
 		m_CameraController.GetCamera(),
-		m_DirectionalLight, m_PointLights
+		m_DirectionalLight, m_PointLights, m_SpotLight
 	);
 	glm::vec3 cubePositions[] = {
 		glm::vec3(0.0f,  0.0f,  0.0f),
@@ -283,10 +301,13 @@ void Sandbox3D::OnImGuiRender()
 	ImGui::SliderFloat3("Attenuation", &(m_PointLightProps[m_PointLightActivated].constant), 0.0f, 1.0f);
 	ImGui::End();
 
-	//ImGui::SliderFloat("Light Cutoff", &m_LightCutOff, 0.0f, 90.0f);
-	//ImGui::SliderFloat3("Global Light Color", glm::value_ptr(m_LightColor), 0.0f, 1.0f);
-	//ImGui::DragFloat3("Light Position/Direction", glm::value_ptr(m_LightPos), 0.1f);
-	//ImGui::SliderFloat3("Light Intensity", reinterpret_cast<float*>(&m_LightIntensity), 0.0f, 1.0f);
+	ImGui::Begin("Spot Light");
+	ImGui::SliderFloat3("Color", glm::value_ptr(m_SpotLightProp.color), 0.0f, 1.0f);
+	ImGui::SliderFloat3("Intensity (a/d/s)", &(m_SpotLightProp.ambient), 0.0f, 1.0f);
+	ImGui::SliderFloat3("Attenuation", &(m_SpotLightProp.constant), 0.0f, 1.0f);
+	ImGui::SliderFloat("Light CutOff", &m_SpotLightProp.cutOff, 0.0f, 90.0f);
+	ImGui::SliderFloat("Light CutOff Epsilon", &m_SpotLightProp.epsilon, 0, 90.0f - m_SpotLightProp.cutOff);
+	ImGui::End();
 
 	ImGui::Begin("Camera Status");
 	ImGui::Checkbox("Perspective", &m_isPerspective);
