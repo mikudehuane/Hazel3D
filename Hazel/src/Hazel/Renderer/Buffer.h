@@ -30,7 +30,7 @@ namespace Hazel {
 
 	struct BufferElement
 	{
-		std::string Name;
+		std::string Name;  // TODO(islander): for debug purpose
 		ShaderDataType Type;
 		uint32_t Size;
 		uint32_t Offset;

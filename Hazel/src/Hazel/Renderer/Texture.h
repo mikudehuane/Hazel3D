@@ -17,7 +17,7 @@ namespace Hazel {
 		virtual void SetData(void* data, uint32_t size) = 0;
 		
 		virtual void Bind(uint32_t slot = 0) const = 0;
-
+		
 		// texture setup
 		virtual void SetTexWrapS(int param) = 0;
 		virtual void SetTexWrapT(int param) = 0;

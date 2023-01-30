@@ -59,15 +59,35 @@ void Sandbox3D::OnAttach()
 		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,  0.0f,  1.0f,  0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f,  1.0f,  0.0f
 	};
-	Hazel::Ref<Hazel::VertexBuffer> boxVB = Hazel::VertexBuffer::Create(boxVertices, sizeof(boxVertices));
-	boxVB->SetLayout({
-		{ Hazel::ShaderDataType::Float3, "a_Position" },
-		{ Hazel::ShaderDataType::Float2, "a_TexCoord" },
-		{ Hazel::ShaderDataType::Float3, "a_Normal" }
-	});
-	// vertices array
-	m_BoxVA = Hazel::VertexArray::Create();
-	m_BoxVA->AddVertexBuffer(boxVB);
+	// material
+	Hazel::Ref<Hazel::Material> material = Hazel::CreateRef<Hazel::Material>(
+		Hazel::Texture2D::Create("Sandbox/assets/textures/Container2.png"),
+		Hazel::Texture2D::Create("Sandbox/assets/textures/Container2Specular.png"),
+		nullptr,
+		//Hazel::Texture2D::Create("Sandbox/assets/textures/Matrix.jpg"),
+		m_BoxShininess
+	);
+	std::vector<Hazel::Vertex> boxVerticesVec;
+	boxVerticesVec.reserve(36);
+	for (int i = 0; i < 36; ++i)
+	{
+		boxVerticesVec.emplace_back(
+			Hazel::Vertex{
+				glm::vec3(boxVertices[i * 8 + 0], boxVertices[i * 8 + 1], boxVertices[i * 8 + 2]),
+				glm::vec3(boxVertices[i * 8 + 5], boxVertices[i * 8 + 6], boxVertices[i * 8 + 7]),
+				glm::vec2(boxVertices[i * 8 + 3], boxVertices[i * 8 + 4])
+			}
+		);
+	}
+	std::vector<uint32_t> boxIndicesVec = {
+		0, 1, 2, 3, 4, 5,
+		6, 7, 8, 9, 10, 11,
+		12, 13, 14, 15, 16, 17,
+		18, 19, 20, 21, 22, 23,
+		24, 25, 26, 27, 28, 29,
+		30, 31, 32, 33, 34, 35
+	};
+	m_BoxMesh = Hazel::CreateRef<Hazel::Mesh>(boxVerticesVec, boxIndicesVec, material);
 
 	// *********************** light source
 
@@ -156,15 +176,6 @@ void Sandbox3D::OnAttach()
 		glm::cos(glm::radians(m_SpotLightProp.cutOff)), glm::cos(glm::radians(m_SpotLightProp.cutOff + m_SpotLightProp.epsilon))
 	);
 
-	// material
-	m_BoxMaterial = Hazel::CreateRef<Hazel::Material>(
-		Hazel::Texture2D::Create("Sandbox/assets/textures/Container2.png"),
-		Hazel::Texture2D::Create("Sandbox/assets/textures/Container2Specular.png"),
-		nullptr,
-		//Hazel::Texture2D::Create("Sandbox/assets/textures/Matrix.jpg"),
-		m_BoxShininess
-	);
-
 	// view phong illumination clearly
 	m_CameraController.SetPosition({ 0.0f, 0.0f, 5.0f });
 	//m_CameraController.SetRotation(glm::normalize(glm::quat(1.0f, 0.09f, 0.04f, 0.0f)));
@@ -221,7 +232,7 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 		glm::cos(glm::radians(m_SpotLightProp.cutOff + m_SpotLightProp.epsilon))
 	);
 
-	m_BoxMaterial->SetShininess(m_BoxShininess);
+	m_BoxMesh->GetMaterial()->SetShininess(m_BoxShininess);
 
 	Hazel::Renderer::BeginScene(
 		m_CameraController.GetCamera(),
@@ -246,8 +257,7 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 		float angle = 20.0f * i;
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 		Hazel::Renderer::Submit(
-			m_BoxVA, m_BoxMaterial,
-			modelMatrix
+			m_BoxMesh, modelMatrix
 		);
 	}
 	for (int i = 0; i < m_PointLights.size(); ++i)
@@ -262,8 +272,7 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 
 void Sandbox3D::OnDetach()
 {
-	m_BoxVA.reset();
-	m_BoxMaterial.reset();
+	m_BoxMesh.reset();
 
 	m_DirectionalLight.reset();
 	

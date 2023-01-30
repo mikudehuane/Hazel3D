@@ -23,6 +23,8 @@
 #include "Hazel/Renderer/Shader.h"
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Renderer/VertexArray.h"
+#include "Hazel/Renderer/Vertex.h"
+#include "Hazel/Renderer/Mesh.h"
 
 #include "Hazel/Renderer/Camera.h"
 #include "Hazel/Renderer/CameraController.h"

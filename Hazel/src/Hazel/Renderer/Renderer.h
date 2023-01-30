@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "Material.h"
 #include "Light.h"
+#include "Mesh.h"
 
 namespace Hazel {
 
@@ -26,8 +27,7 @@ namespace Hazel {
 		static void EndScene();
 
 		static void Submit(
-			const Ref<VertexArray>& vertexArray, 
-			const Ref<Material>& material,
+			const Ref<Mesh>& mesh,
 			const glm::mat4& modelTransform = glm::mat4(1.0f)
 		);
 		// submit a light source to draw

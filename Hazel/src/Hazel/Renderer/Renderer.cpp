@@ -60,19 +60,18 @@ namespace Hazel {
 	}
 
 	void Renderer::Submit(
-		const Ref<VertexArray>& vertexArray,
-		const Ref<Material>& material,
+		const Ref<Mesh>& mesh,
 		const glm::mat4& modelTransform
 	)
 	{
 		auto shader = Hazel::Renderer::GetShaderLib()->Get("Material");
-		material->Bind(shader);
+		mesh->GetMaterial()->Bind(shader);
 		shader->SetMat4("u_Transform", modelTransform);
 		// TODO(islander): validate
 		glm::mat3 modelTransformNormal = glm::transpose(glm::inverse(glm::mat3(modelTransform)));
 		shader->SetMat3("u_TransformNormal", modelTransformNormal);
 		
-		DrawVertexArray(vertexArray);
+		DrawVertexArray(mesh->GetVertexArray());
 	}
 
 	void Renderer::Submit(const Ref<VertexArray>& vertexArray, const Ref<Light>& light, const glm::mat4& modelTransform)
