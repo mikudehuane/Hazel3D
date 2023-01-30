@@ -18,6 +18,7 @@ IncludeDir["Glad"] = "Hazel/vendor/Glad/include"
 IncludeDir["ImGui"] = "Hazel/vendor/imgui"
 IncludeDir["glm"] = "Hazel/vendor/glm"
 IncludeDir["stb_image"] = "Hazel/vendor/stb_image"
+IncludeDir["assimp"] = "Hazel/vendor/assimp/include"
 
 include "Hazel/vendor/GLFW"
 include "Hazel/vendor/Glad"
@@ -60,7 +61,13 @@ project "Hazel"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.assimp}"
+	}
+
+	libdirs
+	{
+		"Hazel/vendor/assimp/lib/Release"
 	}
 
 	links 
@@ -68,6 +75,7 @@ project "Hazel"
 		"GLFW",
 		"Glad",
 		"ImGui",
+		"assimp-vc143-mt.lib",
 		"opengl32.lib"
 	}
 
@@ -112,6 +120,12 @@ project "Sandbox"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+	}
+
+	removefiles
+	{
+		"%{prj.name}/src/Sandbox2D.cpp",
+		"%{prj.name}/src/Sandbox2D.h"
 	}
 
 	includedirs

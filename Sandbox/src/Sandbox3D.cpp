@@ -16,7 +16,7 @@ void Sandbox3D::OnAttach()
 {
 	// box
 	// vertices buffer
-	float boxVertices[] = {
+	float data[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f,  0.0f, -1.0f,
 		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,  0.0f,  0.0f, -1.0f,
 		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  0.0f,  0.0f, -1.0f,
@@ -67,19 +67,19 @@ void Sandbox3D::OnAttach()
 		//Hazel::Texture2D::Create("Sandbox/assets/textures/Matrix.jpg"),
 		m_BoxShininess
 	);
-	std::vector<Hazel::Vertex> boxVerticesVec;
-	boxVerticesVec.reserve(36);
+	std::vector<Hazel::Vertex> boxVertices;
+	boxVertices.reserve(36);
 	for (int i = 0; i < 36; ++i)
 	{
-		boxVerticesVec.emplace_back(
+		boxVertices.emplace_back(
 			Hazel::Vertex{
-				glm::vec3(boxVertices[i * 8 + 0], boxVertices[i * 8 + 1], boxVertices[i * 8 + 2]),
-				glm::vec3(boxVertices[i * 8 + 5], boxVertices[i * 8 + 6], boxVertices[i * 8 + 7]),
-				glm::vec2(boxVertices[i * 8 + 3], boxVertices[i * 8 + 4])
+				glm::vec3(data[i * 8 + 0], data[i * 8 + 1], data[i * 8 + 2]),
+				glm::vec3(data[i * 8 + 5], data[i * 8 + 6], data[i * 8 + 7]),
+				glm::vec2(data[i * 8 + 3], data[i * 8 + 4])
 			}
 		);
 	}
-	std::vector<uint32_t> boxIndicesVec = {
+	std::vector<uint32_t> boxIndices = {
 		0, 1, 2, 3, 4, 5,
 		6, 7, 8, 9, 10, 11,
 		12, 13, 14, 15, 16, 17,
@@ -87,7 +87,9 @@ void Sandbox3D::OnAttach()
 		24, 25, 26, 27, 28, 29,
 		30, 31, 32, 33, 34, 35
 	};
-	m_BoxMesh = Hazel::CreateRef<Hazel::Mesh>(boxVerticesVec, boxIndicesVec, material);
+	m_BoxMesh = Hazel::CreateRef<Hazel::Mesh>(boxVertices, boxIndices, material);
+
+	Hazel::Model model("Sandbox/assets/models/nanosuit");
 
 	// *********************** light source
 
