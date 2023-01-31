@@ -16,81 +16,6 @@ void Sandbox3D::OnAttach()
 {
 	m_Model = Hazel::CreateRef<Hazel::Model>("Sandbox/assets/models/nanosuit/nanosuit.obj");
 
-	// box
-	// vertices buffer
-	float data[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f,  0.0f, -1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,  0.0f,  0.0f, -1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  0.0f,  0.0f, -1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  0.0f,  0.0f, -1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f,  0.0f, -1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f,  0.0f, -1.0f,
-
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,  0.0f,  0.0f,  1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  0.0f,  0.0f,  1.0f,
-
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
-
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  1.0f,  0.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  1.0f,  0.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  1.0f,  0.0f,  0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  0.0f, -1.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  0.0f, -1.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f, -1.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f, -1.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  0.0f, -1.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  0.0f, -1.0f,  0.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f,  1.0f,  0.0f
-	};
-	// material
-	Hazel::Ref<Hazel::Material> material = Hazel::CreateRef<Hazel::Material>(
-		Hazel::Texture2D::Create("Sandbox/assets/textures/Container2.png"),
-		Hazel::Texture2D::Create("Sandbox/assets/textures/Container2Specular.png"),
-		nullptr,
-		//Hazel::Texture2D::Create("Sandbox/assets/textures/Matrix.jpg"),
-		m_BoxShininess
-	);
-	std::vector<Hazel::Vertex> boxVertices;
-	boxVertices.reserve(36);
-	for (int i = 0; i < 36; ++i)
-	{
-		boxVertices.emplace_back(
-			Hazel::Vertex{
-				glm::vec3(data[i * 8 + 0], data[i * 8 + 1], data[i * 8 + 2]),
-				glm::vec3(data[i * 8 + 5], data[i * 8 + 6], data[i * 8 + 7]),
-				glm::vec2(data[i * 8 + 3], data[i * 8 + 4])
-			}
-		);
-	}
-	std::vector<uint32_t> boxIndices = {
-		0, 1, 2, 3, 4, 5,
-		6, 7, 8, 9, 10, 11,
-		12, 13, 14, 15, 16, 17,
-		18, 19, 20, 21, 22, 23,
-		24, 25, 26, 27, 28, 29,
-		30, 31, 32, 33, 34, 35
-	};
-	m_BoxMesh = Hazel::CreateRef<Hazel::Mesh>(boxVertices, boxIndices, material);
-
 	// *********************** light source
 
 	// directional light
@@ -234,8 +159,6 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 		glm::cos(glm::radians(m_SpotLightProp.cutOff + m_SpotLightProp.epsilon))
 	);
 
-	m_BoxMesh->GetMaterial()->SetShininess(m_BoxShininess);
-
 	Hazel::Renderer::BeginScene(
 		m_CameraController.GetCamera(),
 		m_DirectionalLight, m_PointLights, m_SpotLight
@@ -252,14 +175,15 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 		glm::vec3(1.5f,  0.2f, -1.5f),
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
-	for (unsigned int i = 0; i < 10; i++)
+	for (unsigned int i = 0; i < 1; i++)
 	{
-		glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), m_BoxPos);
+		glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), m_ModelPos);
 		modelMatrix = glm::translate(modelMatrix, cubePositions[i]);
 		float angle = 20.0f * i;
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		modelMatrix = glm::scale(modelMatrix, glm::vec3(m_ModelScale));
 		Hazel::Renderer::Submit(
-			m_BoxMesh, modelMatrix
+			*m_Model, modelMatrix
 		);
 	}
 	for (int i = 0; i < m_PointLights.size(); ++i)
@@ -274,7 +198,6 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 
 void Sandbox3D::OnDetach()
 {
-	m_BoxMesh.reset();
 	m_Model.reset();
 
 	m_DirectionalLight.reset();
@@ -286,9 +209,9 @@ void Sandbox3D::OnDetach()
 
 void Sandbox3D::OnImGuiRender()
 {
-	ImGui::Begin("Box Settings");
-	ImGui::DragFloat3("Box Position", glm::value_ptr(m_BoxPos), 0.1f);
-	ImGui::SliderFloat("Box Shininess", &m_BoxShininess, 0.0f, 256.0f);
+	ImGui::Begin("Model Settings");
+	ImGui::DragFloat3("Model Position", glm::value_ptr(m_ModelPos), 0.1f);
+	ImGui::SliderFloat("Model Scale", &m_ModelScale, 0.0f, 2.0f);
 	ImGui::End();
 
 	ImGui::Begin("Directional Light");

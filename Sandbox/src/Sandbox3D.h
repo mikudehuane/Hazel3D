@@ -23,10 +23,9 @@ private:
 	Hazel::CameraController m_CameraController;
 	bool m_isPerspective = true;
 
-	float m_BoxShininess = 32.0f;
-	glm::vec3 m_BoxPos = glm::vec3(0.0f, 0.0f, 0.0f);
-	Hazel::Ref<Hazel::Mesh> m_BoxMesh;
 	Hazel::Ref<Hazel::Model> m_Model;
+	glm::vec3 m_ModelPos = { 0.0f, -1.3f, 0.0f };
+	float m_ModelScale = 0.2f;
 
 	Hazel::Ref<Hazel::DirectionalLight> m_DirectionalLight;
 	struct {

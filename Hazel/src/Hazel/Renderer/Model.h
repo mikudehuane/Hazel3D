@@ -16,6 +16,8 @@ namespace Hazel {
 		{
 			LoadModel(path);
 		}
+
+		const std::vector<Mesh>& GetMeshes() const { return m_Meshes; }
 	private:
 		void LoadModel(const std::string& path);
 		void ProcessNode(aiNode* node, const aiScene* scene);
