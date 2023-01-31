@@ -9,6 +9,8 @@ namespace Hazel {
 	class Texture
 	{
 	public:
+		enum Type { Diffuse, Specular, Emission };
+	public:
 		virtual ~Texture() = default;
 		
 		virtual uint32_t GetWidth() const = 0;

@@ -17,7 +17,7 @@ namespace Hazel {
 		Mesh(
 			const std::vector<Vertex>& vertices,
 			const std::vector<uint32_t>& indices,
-			const Ref<Material>& material
+			const Ref<Material>& material = nullptr
 		):
 			m_Vertices(vertices), m_Indices(indices), m_Material(material)
 		{

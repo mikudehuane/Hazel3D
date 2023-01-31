@@ -18,9 +18,20 @@ namespace Hazel {
 			float shininess = 32.0f
 		);
 		
-		void SetDiffuseMap(Ref<Texture2D> texture);
-		void SetSpecularMap(Ref<Texture2D> texture);
-		void SetEmissionMap(Ref<Texture2D> texture);
+		inline void SetDiffuseMap(Ref<Texture2D> texture)
+		{
+			m_DiffuseMap = texture;
+		}
+		inline void SetSpecularMap(Ref<Texture2D> texture)
+		{
+			m_SpecularMap = texture;
+		}
+		inline void SetEmissionMap(Ref<Texture2D> texture)
+		{
+			m_EmissionMap = texture;
+		}
+
+		void SetTextureMap(Ref<Texture2D> texture, Texture::Type type);
 
 		inline float GetShininess() const { return m_Shininess; }
 		inline void SetShininess(float shininess) { m_Shininess = shininess; }

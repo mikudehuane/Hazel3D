@@ -26,6 +26,7 @@ private:
 	float m_BoxShininess = 32.0f;
 	glm::vec3 m_BoxPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	Hazel::Ref<Hazel::Mesh> m_BoxMesh;
+	Hazel::Ref<Hazel::Model> m_Model;
 
 	Hazel::Ref<Hazel::DirectionalLight> m_DirectionalLight;
 	struct {

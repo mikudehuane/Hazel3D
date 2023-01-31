@@ -14,6 +14,8 @@ Sandbox3D::Sandbox3D():
 
 void Sandbox3D::OnAttach()
 {
+	m_Model = Hazel::CreateRef<Hazel::Model>("Sandbox/assets/models/nanosuit/nanosuit.obj");
+
 	// box
 	// vertices buffer
 	float data[] = {
@@ -88,8 +90,6 @@ void Sandbox3D::OnAttach()
 		30, 31, 32, 33, 34, 35
 	};
 	m_BoxMesh = Hazel::CreateRef<Hazel::Mesh>(boxVertices, boxIndices, material);
-
-	Hazel::Model model("Sandbox/assets/models/nanosuit");
 
 	// *********************** light source
 
@@ -275,6 +275,7 @@ void Sandbox3D::OnUpdate(Hazel::Timestep ts)
 void Sandbox3D::OnDetach()
 {
 	m_BoxMesh.reset();
+	m_Model.reset();
 
 	m_DirectionalLight.reset();
 	

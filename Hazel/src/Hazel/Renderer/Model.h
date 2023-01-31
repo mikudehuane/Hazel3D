@@ -1,5 +1,11 @@
 #pragma once
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+#include "Mesh.h"
+
 namespace Hazel {
 
 	class Model
@@ -8,10 +14,16 @@ namespace Hazel {
 		Model() = delete;
 		Model(const std::string& path)
 		{
-			loadModel(path);
+			LoadModel(path);
 		}
 	private:
-		void loadModel(const std::string& path);
+		void LoadModel(const std::string& path);
+		void ProcessNode(aiNode* node, const aiScene* scene);
+		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		Ref<Material> LoadMaterial(aiMaterial* mat);
+	private:
+		std::vector<Mesh> m_Meshes;
+		std::string m_Directory;  // parent directory of the model
 	};
 
 }
