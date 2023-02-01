@@ -24,10 +24,22 @@ namespace Hazel {
 			SetupMesh();
 		}
 
+		Mesh(Mesh&& other)
+		{
+			MoveMesh(std::move(other));
+		}
+
+		Mesh& operator=(Mesh&& other)
+		{
+			MoveMesh(std::move(other));
+			return *this;
+		}
+
 		inline Ref<Material> GetMaterial() const { return m_Material; }
 		inline Ref<VertexArray> GetVertexArray() const { return m_VertexArray; }
 	private:
 		void SetupMesh();
+		void MoveMesh(Mesh&& other);
 	private:
 		std::vector<Vertex> m_Vertices;
 		std::vector<unsigned int> m_Indices;

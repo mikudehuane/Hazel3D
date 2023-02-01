@@ -20,7 +20,6 @@ namespace Hazel {
 		RenderCommand::SetViewport(0, 0, width, height);
 	}
 
-	// TODO(islander): decouple different lights and use separate shaders
 	void Renderer::BeginScene(
 		const Camera& camera,
 		// lighting

@@ -25,7 +25,7 @@ namespace Hazel {
 		for (uint32_t i = 0; i < node->mNumMeshes; ++i)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			m_Meshes.push_back(ProcessMesh(mesh, scene));  // TODO(islander): one hard copy here
+			m_Meshes.push_back(ProcessMesh(mesh, scene));
 		}
 		
 		for (uint32_t i = 0; i < node->mNumChildren; ++i)
