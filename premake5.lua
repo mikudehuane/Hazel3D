@@ -67,7 +67,7 @@ project "Hazel"
 
 	libdirs
 	{
-		"Hazel/vendor/assimp/lib/Debug"
+		"Hazel/vendor/assimp/lib/Release"
 	}
 
 	links 
@@ -75,7 +75,7 @@ project "Hazel"
 		"GLFW",
 		"Glad",
 		"ImGui",
-		"assimp-vc143-mtd.lib",
+		"assimp-vc143-mt.lib",
 		"opengl32.lib"
 	}
 
