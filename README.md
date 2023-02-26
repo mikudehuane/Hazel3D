@@ -1,5 +1,6 @@
 # Hazel
 ![demo.png](figs/demo.png)
+Watch a demo video on: https://www.bilibili.com/video/BV1GT411q76M
 
 Hazel Engine with 3D rendering implemented.
 - Typing "W" or "S" to move forward or backward.
