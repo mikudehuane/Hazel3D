@@ -1,0 +1,6 @@
+!bin/
+bin/*
+!bin/premake/
+bin/premake/*
+!bin/premake/premake5.exe
+!bin/premake/LICENSE.txt
